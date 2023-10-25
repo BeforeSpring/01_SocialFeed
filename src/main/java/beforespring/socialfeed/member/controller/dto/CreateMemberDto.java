@@ -9,8 +9,14 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+/**
+ * 멤버 생성 DTO
+ */
 public class CreateMemberDto {
 
+    /**
+     * 멤버 생성 요청 dto. 이메일과 패스워드의 유효성을 검증함
+     */
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     static public class Request {
