@@ -13,7 +13,7 @@ public interface MemberService {
      *
      * @param request 멤버 생성 요청 DTO
      */
-    void join(CreateMemberDto.Request request);
+    Long join(CreateMemberDto.Request request);
 
     /**
      * 가입 승인
