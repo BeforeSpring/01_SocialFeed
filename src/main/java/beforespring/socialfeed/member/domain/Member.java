@@ -32,4 +32,21 @@ public class Member {
     private String username;
     @Column(nullable = false)
     private String password;
+
+    public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher)  throws Exception {
+        try {
+            validator.validate(this, rawPassword, hasher);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid password.");
+        }
+    }
+
+    public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
+        try {
+            validatePassword(rawPassword, validator, hasher);
+            this.password = hasher.hash(rawPassword);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid password.");
+        }
+    };
 }
