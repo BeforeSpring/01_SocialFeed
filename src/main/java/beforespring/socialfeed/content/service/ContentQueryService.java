@@ -4,8 +4,9 @@ import beforespring.socialfeed.content.service.dto.ContentListElement;
 import beforespring.socialfeed.content.service.dto.ContentListQueryParameter;
 import beforespring.socialfeed.content.service.dto.ContentStatisticsData;
 import beforespring.socialfeed.content.service.dto.ContentStatisticsQueryParameter;
-import java.util.List;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface ContentQueryService {
 

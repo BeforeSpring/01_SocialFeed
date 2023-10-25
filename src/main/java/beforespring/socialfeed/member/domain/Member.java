@@ -1,14 +1,10 @@
 package beforespring.socialfeed.member.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import beforespring.socialfeed.member.exception.InvalidPasswordException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Table(
@@ -32,4 +28,19 @@ public class Member {
     private String username;
     @Column(nullable = false)
     private String password;
+
+    public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) throws InvalidPasswordException {
+        try {
+            validator.validate(this, rawPassword, hasher);
+        } catch (InvalidPasswordException e) {
+            throw new InvalidPasswordException("Invalid password.");
+        }
+    }
+
+    public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) throws InvalidPasswordException {
+        validatePassword(rawPassword, validator, hasher);
+        this.password = hasher.hash(rawPassword);
+    }
+
+    ;
 }

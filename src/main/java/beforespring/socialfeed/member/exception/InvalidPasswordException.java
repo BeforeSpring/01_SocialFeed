@@ -1,9 +1,10 @@
 package beforespring.socialfeed.member.exception;
 
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-public class InvalidException extends Exception {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class InvalidPasswordException extends Exception {
     public InvalidPasswordException(String msg) {
         super(msg);
     }

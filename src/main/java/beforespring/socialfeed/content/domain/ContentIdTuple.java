@@ -1,12 +1,13 @@
 package beforespring.socialfeed.content.domain;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * contentId(String), ContentSourceType을 쌍으로 하는 ID 클래스

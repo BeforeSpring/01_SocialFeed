@@ -1,9 +1,10 @@
 package beforespring.socialfeed.content.service.dto;
 
 import beforespring.socialfeed.content.domain.ContentSourceType;
+import lombok.Builder;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.Builder;
 
 /**
  * @param contentId
