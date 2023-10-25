@@ -12,6 +12,7 @@ public interface MemberService {
      * 가입 요청. 가입 요청시 6자리의 랜덤 코드를 이메일로 발송. (이메일 발송 생략에 대해서 논의 필요)
      *
      * @param request 멤버 생성 요청 DTO
+     * @return member id
      */
     Long join(CreateMemberDto.Request request);
 
