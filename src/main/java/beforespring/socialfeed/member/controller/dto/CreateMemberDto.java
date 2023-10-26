@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 멤버 생성 DTO
@@ -41,8 +43,11 @@ public class CreateMemberDto {
          * @param password 검증할 패스워드
          */
         private void validatePasswordPattern(String password) {
-            if (!isPasswordValid(password)) {
-                throw new IllegalArgumentException("숫자, 문자, 특수문자 중 2가지 이상을 포함해야 하고, 3회 이상 연속되는 문자는 사용이 불가합니다.");
+            if (isConsecutiveCharsPattern(password)) {
+                throw new IllegalArgumentException("동일한 문자를 3회 이상 연속으로 사용할 수 없습니다.");
+            }
+            if (!isComplexCharsPattern(password)) {
+                throw new IllegalArgumentException("숫자, 문자, 특수문자 중 2가지 이상을 포함해야 합니다.");
             }
         }
 
@@ -50,15 +55,27 @@ public class CreateMemberDto {
          * 비밀번호 패턴 검사 로직
          *
          * @param password 검증할 패스워드
-         * @return 숫자, 문자, 특수문자가 2개 이상 조합, 동일한 문자가 3회 미만 연속 시 true, 그렇지 않으면 else
+         * @return 숫자, 문자, 특수문자가 중 2개 이상을 포함하면 true, 아니면 false
          */
-        private boolean isPasswordValid(String password) {
-            String pattern = "^(?=(.*\\\\d.*)(.*[A-Za-z].*|.*[^A-Za-z\\\\d].*))|" +
-                                 "(?=(.*[A-Za-z].*)(.*[^A-Za-z\\\\d].*))(?=.*\\\\d.*)|" +
-                                 "(?=(.*[A-Za-z].*)(.*\\\\d.*))(.*[^A-Za-z\\\\d].*)$|";
-            String consecutiveCharsPattern = "(.)\\1{2,}";
+        private boolean isComplexCharsPattern(String password) {
+            String complexCharsPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{10,}$|" +
+                                             "(?=.*[A-Za-z])(?=.*\\d).{10,}$|" +
+                                             "(?=.*[A-Za-z])(?=.*[^A-Za-z\\d]).{10,}$|" +
+                                             "(?=.*\\d)(?=.*[^A-Za-z\\d]).{10,}$";
+            Matcher matcher = Pattern.compile(complexCharsPattern).matcher(password);
+            return matcher.matches();
+        }
 
-            return password.matches(pattern) && !password.matches(consecutiveCharsPattern);
+        /**
+         * 비밀번호 패턴 검사 로직
+         *
+         * @param password 검증할 패스워드
+         * @return 동일한 문자가 3회 이상 연속되면 true, 아니면 false
+         */
+        private boolean isConsecutiveCharsPattern(String password) {
+            String consecutiveCharsPattern = "(.)\\1\\1";
+            Matcher matcher = Pattern.compile(consecutiveCharsPattern).matcher(password);
+            return matcher.find();
         }
     }
 
