@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class InvalidPasswordException extends Exception {
-    public InvalidPasswordException(String msg) {
+public class PasswordDisMatchException extends RuntimeException {
+    public PasswordDisMatchException(String msg) {
         super(msg);
     }
 }
