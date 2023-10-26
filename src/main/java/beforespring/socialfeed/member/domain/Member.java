@@ -1,6 +1,6 @@
 package beforespring.socialfeed.member.domain;
 
-import beforespring.socialfeed.member.exception.InvalidPasswordException;
+import beforespring.socialfeed.member.exception.PasswordDisMatchException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -29,18 +29,24 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) throws InvalidPasswordException {
-        try {
-            validator.validate(this, rawPassword, hasher);
-        } catch (InvalidPasswordException e) {
-            throw new InvalidPasswordException("Invalid password.");
+    protected Member(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    static public Member create(String username, String password) {
+        return new Member(username, password);
+    }
+
+    public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
+        validator.validate(this, rawPassword, hasher);
+        if (!hasher.matches(rawPassword, password)) {
+            throw new PasswordDisMatchException("This password is wrong");
         }
     }
 
-    public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) throws InvalidPasswordException {
-        validatePassword(rawPassword, validator, hasher);
+    public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
+        validator.validate(this, rawPassword, hasher);
         this.password = hasher.hash(rawPassword);
     }
-
-    ;
 }
