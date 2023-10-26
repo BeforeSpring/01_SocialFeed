@@ -30,9 +30,9 @@ public class Content {
 
     private String title;
     private String content;
-    private int viewCount;
-    private int likeCount;
-    private int shareCount;
+    private Long viewCount;
+    private Long likeCount;
+    private Long shareCount;
 
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;

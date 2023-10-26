@@ -9,9 +9,9 @@ public record ContentSpecificData(
         ContentSourceType contentSourceType,
         String title,
         String content,
-        int viewCount,
-        int likeCount,
-        int shareCount,
+        Long viewCount,
+        Long likeCount,
+        Long shareCount,
         LocalDateTime updatedAt,
         LocalDateTime createdAt
 
