@@ -1,10 +1,10 @@
 package beforespring.socialfeed.content.domain;
 
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import lombok.*;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -17,8 +17,35 @@ import javax.persistence.Table;
         )
     }
 )
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Content {
+    @Id
+    @Column(name = "memberId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @EmbeddedId
-    private ContentIdTuple idTuple;
+    @Enumerated(EnumType.STRING)
+    private ContentSourceType contentSourceType;
+
+    private String title;
+    private String content;
+    private Long viewCount;
+    private Long likeCount;
+    private Long shareCount;
+
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
+
+    public void incrementShareCount() {
+        this.shareCount++;
+    }
 }

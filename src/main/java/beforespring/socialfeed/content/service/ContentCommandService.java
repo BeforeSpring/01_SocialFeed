@@ -1,6 +1,5 @@
 package beforespring.socialfeed.content.service;
 
-import beforespring.socialfeed.content.domain.ContentIdTuple;
 import beforespring.socialfeed.content.service.dto.ContentSpecificData;
 import beforespring.socialfeed.member.domain.Member;
 
@@ -20,10 +19,10 @@ public interface ContentCommandService {
      * 횟수 제한이 없습니다.
      * </li>
      *
-     * @param contentIdTuple 찾을 게시물 ID
+     * @param contentId 찾을 게시물 ID
      * @return ContentSpecificData
      */
-    ContentSpecificData getContentSpecific(ContentIdTuple contentIdTuple);
+    ContentSpecificData getContentSpecific(Long contentId);
 
     /**
      * <p>
@@ -33,10 +32,10 @@ public interface ContentCommandService {
      * 게시물들은 본 서비스가 아닌 외부 서비스에서 관리됩니다. 그렇기에 좋아요 클릭 시 각 SNS 별 아래 명시된 API 를 호출합니다.
      * </li>
      *
-     * @param contentIdTuple 좋아요할 게시물 ID
+     * @param contentId 좋아요할 게시물 ID
      * @param member         공유하는 멤버
      */
-    void like(ContentIdTuple contentIdTuple, Member member);
+    void like(Long contentId, Member member);
 
     /**
      * <p>
@@ -52,8 +51,8 @@ public interface ContentCommandService {
      * 횟수 제한이 없습니다.
      * </li>
      *
-     * @param contentIdTuple 공유할 게시물 아이디
+     * @param contentId 공유할 게시물 아이디
      * @param member         공유하는 멤버
      */
-    void share(ContentIdTuple contentIdTuple, Member member);
+    void share(Long contentId, Member member);
 }
