@@ -1,11 +1,6 @@
 package beforespring.socialfeed.content.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 해시태그 검색용 테이블
@@ -30,5 +25,4 @@ public class HashtagContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // UUID 적용 고려할것.
     private String hashtag;
-    private ContentIdTuple contentId;  // one to many 고려
 }
