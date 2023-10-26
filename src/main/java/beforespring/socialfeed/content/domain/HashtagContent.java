@@ -1,11 +1,27 @@
 package beforespring.socialfeed.content.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 해시태그 검색용 테이블
  */
 @Entity
+@Getter
 @Table(
     name = "hashtag",
     indexes = {
@@ -14,15 +30,32 @@ import javax.persistence.*;
             columnList = "hashtag"
         ),
         @Index(
-            name = "idx__hashtag__content_id__content_source_type",
-            columnList = "content_id, content_source_type"
+            name = "idx__hashtag__content_id",
+            columnList = "content_id"
         )
     }
 )
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HashtagContent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // UUID 적용 고려할것.
+    @Column(name = "hashtag_content_id")
+    private Long id;  // UUID(v7) 적용 고려할것.
+
+    @Column(name = "hashtag", nullable = false)
     private String hashtag;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Content content;
+
+    @Builder
+    protected HashtagContent(Long id, String hashtag, Content content) {
+        this.id = id;
+        this.hashtag = hashtag;
+        this.content = content;
+    }
+
+
 }
