@@ -1,5 +1,6 @@
 package beforespring.socialfeed.content.domain;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
@@ -26,12 +27,17 @@ import lombok.NoArgsConstructor;
     name = "hashtag",
     indexes = {
         @Index(
-            name = "idx__hashtag__hashtag",
-            columnList = "hashtag"
+            name = "idx__hashtag__hashtag__created_at",  // 무한스크롤에 사용되는 인덱스
+            columnList = "hashtag, created_at"
         ),
         @Index(
-            name = "idx__hashtag__content_id",
+            name = "idx__hashtag__content_id",  // 외래키 제약조건을 제거하는 대신 사용한 join용 인덱스
             columnList = "content_id"
+        ),
+        @Index(
+            name = "idx__hashtag__created_at",  // n시간 이내 가장 많이 사용된 해시태그를 찾기 위한 인덱스
+            columnList = "created_at"
+
         )
     }
 )
@@ -50,12 +56,14 @@ public class HashtagContent {
     @JoinColumn(name = "content_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Content content;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
     @Builder
-    protected HashtagContent(Long id, String hashtag, Content content) {
+    protected HashtagContent(Long id, String hashtag, Content content, LocalDateTime createdAt) {
         this.id = id;
         this.hashtag = hashtag;
         this.content = content;
+        this.createdAt = createdAt;
     }
-
-
 }
