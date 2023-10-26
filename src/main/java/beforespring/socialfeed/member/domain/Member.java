@@ -1,6 +1,6 @@
 package beforespring.socialfeed.member.domain;
 
-import beforespring.socialfeed.member.exception.PasswordDismatchException;
+import beforespring.socialfeed.member.exception.PasswordMismatchException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -41,7 +41,7 @@ public class Member {
     public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
         validator.validate(this, rawPassword, hasher);
         if (!hasher.matches(rawPassword, password)) {
-            throw new PasswordDismatchException();
+            throw new PasswordMismatchException();
         }
     }
 
