@@ -4,23 +4,25 @@ import beforespring.socialfeed.member.domain.Confirm;
 import beforespring.socialfeed.member.domain.ConfirmRepository;
 import beforespring.socialfeed.member.domain.Member;
 import beforespring.socialfeed.member.domain.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.*;
-import static org.assertj.core.api.Assertions.*;
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.Request;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 class MemberServiceImplTest {
 
-    @Autowired MemberService memberService;
-    @Autowired MemberRepository memberRepository;
-    @Autowired ConfirmRepository confirmRepository;
+    @Autowired
+    MemberService memberService;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    ConfirmRepository confirmRepository;
 
     @Test
     @DisplayName("회원가입한 유저의 이름이 저장된 이름과 동일해야 함.")

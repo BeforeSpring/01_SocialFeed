@@ -39,6 +39,6 @@ public class MemberServiceImpl implements MemberService {
             throw new PasswordMismatchException();
         if (!confirm.getToken().equals(token))
             throw new TokenMismatchException();
-        //member 승인 상태 변경 필요
+        //member: 승인 상태 변경 필요
     }
 }
