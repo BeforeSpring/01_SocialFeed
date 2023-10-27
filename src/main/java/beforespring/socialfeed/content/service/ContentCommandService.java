@@ -33,9 +33,8 @@ public interface ContentCommandService {
      * </li>
      *
      * @param contentId 좋아요할 게시물 ID
-     * @param member         공유하는 멤버
      */
-    void like(Long contentId, Member member);
+    void like(Long contentId);
 
     /**
      * <p>
@@ -52,7 +51,6 @@ public interface ContentCommandService {
      * </li>
      *
      * @param contentId 공유할 게시물 아이디
-     * @param member         공유하는 멤버
      */
-    void share(Long contentId, Member member);
+    void share(Long contentId);
 }

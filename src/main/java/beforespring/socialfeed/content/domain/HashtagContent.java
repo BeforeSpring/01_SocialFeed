@@ -12,10 +12,12 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 해시태그 검색용 테이블
@@ -57,5 +59,14 @@ public class HashtagContent {
         this.content = content;
     }
 
+    /**
+     * 해시태그 문자열 분할
+     */
+    public List<String> getHashtagsList() {
+        if (hashtag == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(hashtag.split(" "));
+    }
 
 }

@@ -1,20 +1,13 @@
 package beforespring.socialfeed.content.domain;
 
-
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(
@@ -30,11 +23,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Content {
-
     @Id
     @Column(name = "content_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     /**
      * <p>외부 시스템에서 관리되는 ID로, unique함이 보장되지 않음. unique를 보장하려면 source와 함께 묶어야함.</p>
@@ -63,6 +56,7 @@ public class Content {
     private LocalDateTime updatedAt;
 
     @Column(name = "created_at")
+
     private LocalDateTime createdAt;
 
     public void incrementViewCount() {
@@ -70,6 +64,9 @@ public class Content {
     }
 
     public void incrementLikeCount() {
+        if (likeCount == null) {
+            likeCount = 0L;
+        }
         this.likeCount++;
     }
 
