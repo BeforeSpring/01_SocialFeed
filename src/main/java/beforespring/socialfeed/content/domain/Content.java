@@ -1,6 +1,9 @@
 package beforespring.socialfeed.content.domain;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.*;
 
 import lombok.AccessLevel;
@@ -38,6 +41,9 @@ public class Content {
     @Enumerated(EnumType.STRING)
     @Column(name = "content_source_type")
     private ContentSourceType contentSourceType;
+
+    @Column(name = "hashtags")
+    private String hashtags;
 
     private String title;
 
@@ -80,11 +86,22 @@ public class Content {
         this.shareCount++;
     }
 
+    /**
+     * 해시태그 문자열 분할
+     */
+    public List<String> getHashtagsList() {
+        if (hashtags == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(hashtags.split(" "));
+    }
+
     @Builder
     protected Content(
         Long id,
         String contentSourceId,
         ContentSourceType contentSourceType,
+        String hashtags,
         String title,
         String content,
         Long viewCount,
@@ -96,6 +113,7 @@ public class Content {
         this.id = id;
         this.contentSourceId = contentSourceId;
         this.contentSourceType = contentSourceType;
+        this.hashtags = hashtags;
         this.title = title;
         this.content = content;
         this.viewCount = viewCount;

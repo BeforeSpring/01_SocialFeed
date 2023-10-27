@@ -10,9 +10,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +34,7 @@ class ContentCommandImplServiceImplTest {
     @Test
     @DisplayName("getContentSpecific 테스트")
     public void testGetContentSpecific() {
+
         Content content = Content.builder()
             .id(1L)
             .contentSourceType(ContentSourceType.FACEBOOK)
@@ -37,11 +43,7 @@ class ContentCommandImplServiceImplTest {
             .viewCount(10L)
             .likeCount(3L)
             .shareCount(5L)
-            .build();
-
-        HashtagContent hashtagContent = HashtagContent.builder()
-            .id(1L)
-            .hashtag("태그1 태그2 태그3")
+            .hashtags("태그1 태그2 태그3")
             .build();
 
         ContentSpecificData contentSpecificData = ContentSpecificData.builder()
@@ -58,7 +60,6 @@ class ContentCommandImplServiceImplTest {
             .build();
 
         when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
-        when(hashtagContentRepository.findByContent(content)).thenReturn(Optional.of(hashtagContent));
 
         ContentCommandService contentCommandService = new ContentCommandImplServiceImpl(contentRepository, hashtagContentRepository);
 

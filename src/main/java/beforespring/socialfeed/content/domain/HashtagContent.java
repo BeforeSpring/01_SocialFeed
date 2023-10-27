@@ -58,15 +58,4 @@ public class HashtagContent {
         this.hashtag = hashtag;
         this.content = content;
     }
-
-    /**
-     * 해시태그 문자열 분할
-     */
-    public List<String> getHashtagsList() {
-        if (hashtag == null) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(hashtag.split(" "));
-    }
-
 }

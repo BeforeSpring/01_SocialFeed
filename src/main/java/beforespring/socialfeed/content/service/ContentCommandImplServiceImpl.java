@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,8 +23,7 @@ public class ContentCommandImplServiceImpl implements ContentCommandService {
         Content content = contentRepository.findById(contentId).orElseThrow(() -> new ContentNotFoundException());
         content.incrementViewCount();
 
-        HashtagContent hashtagContent = hashtagContentRepository.findByContent(content).orElseThrow(() -> new HashtagNotFoundException());
-        List<String> hashtagsList = hashtagContent.getHashtagsList();
+
 
         ContentSpecificData contentData = ContentSpecificData.builder()
             .contentId(contentId)
@@ -32,7 +32,7 @@ public class ContentCommandImplServiceImpl implements ContentCommandService {
             .content(content.getContent())
             .viewCount(content.getViewCount())
             .likeCount(content.getLikeCount())
-            .hashtags(hashtagsList)
+            .hashtags(content.getHashtagsList())
             .shareCount(content.getShareCount())
             .updatedAt(content.getUpdatedAt())
             .createdAt(content.getCreatedAt())
@@ -47,7 +47,9 @@ public class ContentCommandImplServiceImpl implements ContentCommandService {
         Content content = contentRepository.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException());
 
-        content.incrementLikeCount();
+        synchronized (content) {
+            content.incrementLikeCount();
+        }
     }
 
     @Override
