@@ -74,11 +74,10 @@ public class Member {
     }
 
     /**
-     * 가입 승인 시 상태값 업데이트
-     *
-     * @param status 변경할 상태값
+     * 가입 승인 시 상태를 승인으로 변경
      */
-    public void updateConfirmStatus(ConfirmStatus status) {
-        this.status = status;
+    public void joinConfirm() {
+        if (this.status == ConfirmStatus.UNAUTHORIZED)
+            this.status = ConfirmStatus.AUTHORIZED;
     }
 }
