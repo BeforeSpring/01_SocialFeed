@@ -30,14 +30,11 @@ public class Confirm {
     @JoinColumn(name = "memberId")
     private Member member;
     @Column(nullable = false)
-    private Boolean confirm;
-    @Column(nullable = false)
     private String token;
 
     @Builder
     public Confirm(Member member, String token) {
         this.member = member;
-        this.confirm = false;
         this.token = token;
     }
 
@@ -45,7 +42,4 @@ public class Confirm {
         this.token = token;
     }
 
-    public void updateConfirm(Boolean confirm) {
-        this.confirm = confirm;
-    }
 }
