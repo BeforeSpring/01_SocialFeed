@@ -1,8 +1,11 @@
 package beforespring.socialfeed.member.controller;
 
 import beforespring.socialfeed.member.controller.dto.CreateMemberDto;
+import beforespring.socialfeed.member.controller.dto.SignupMemberDto;
+import beforespring.socialfeed.member.domain.Member;
 import beforespring.socialfeed.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,5 +28,12 @@ public class MemberController {
     public CreateMemberDto.Response createMember(@RequestBody @Valid CreateMemberDto.Request request) {
         Long memberId = memberService.join(request);
         return new CreateMemberDto.Response(memberId);
+    }
+
+    @PostMapping("/api/member/signup/{token}")
+    public void signupMember(@RequestBody @Valid SignupMemberDto.Request request, @PathVariable("token") Long token) {
+        Member member = Member.builder()
+
+        memberService.joinConfirm();
     }
 }
