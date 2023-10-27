@@ -42,7 +42,7 @@ public class Content {
     @Column(name = "content_source_type")
     private ContentSourceType contentSourceType;
 
-    @Column(name = "hashtags")
+    @Column(name = "hashtags", columnDefinition = "varchar(1000)")
     private String hashtags;
 
     private String title;
