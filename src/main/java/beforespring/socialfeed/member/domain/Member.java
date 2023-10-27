@@ -45,14 +45,12 @@ public class Member {
     }
 
     public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
-        validator.validate(this, rawPassword, hasher);
         if (!hasher.matches(rawPassword, password)) {
             throw new PasswordMismatchException();
         }
     }
 
     public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
-        validator.validate(this, rawPassword, hasher);
         this.password = hasher.hash(rawPassword);
     }
 }
