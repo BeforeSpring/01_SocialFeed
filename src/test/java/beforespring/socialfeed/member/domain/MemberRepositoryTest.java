@@ -16,17 +16,16 @@ class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private EntityManager em;
-
     @Test
     @DisplayName("빌더를 통해 멤버 생성")
     public void create_member_use_builder() {
         // given
+        PasswordHasher hasher = new PasswordHasherImpl();
         Member member = Member.builder()
                             .username("User1")
-                            .password("1234")
+                            .raw("1234")
                             .id(1L)
+                            .hasher(hasher)
                             .build();
 
         // when then
@@ -39,10 +38,12 @@ class MemberRepositoryTest {
     @DisplayName("멤버 객체 저장")
     public void save_member() {
         // given
+        PasswordHasher hasher = new PasswordHasherImpl();
         Member member = Member.builder()
                             .username("User1")
-                            .password("1234")
+                            .raw("1234")
                             .id(1L)
+                            .hasher(hasher)
                             .build();
 
         memberRepository.save(member);

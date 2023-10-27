@@ -36,11 +36,12 @@ public class Member {
     protected Member(
         Long id,
         String username,
-        String password
+        String raw,
+        PasswordHasher hasher
         ){
         this.id = id;
         this.username = username;
-        this.password = password;
+        this.password = hasher.hash(raw);
     }
 
     public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
