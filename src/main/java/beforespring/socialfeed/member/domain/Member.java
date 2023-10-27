@@ -2,6 +2,8 @@ package beforespring.socialfeed.member.domain;
 
 import beforespring.socialfeed.member.exception.PasswordMismatchException;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -18,6 +20,7 @@ import javax.persistence.*;
     }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Member {
 
     @Id
@@ -29,13 +32,15 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    protected Member(String username, String password) {
+    @Builder
+    protected Member(
+        Long id,
+        String username,
+        String password
+        ){
+        this.id = id;
         this.username = username;
         this.password = password;
-    }
-
-    static public Member create(String username, String password) {
-        return new Member(username, password);
     }
 
     public void validatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
