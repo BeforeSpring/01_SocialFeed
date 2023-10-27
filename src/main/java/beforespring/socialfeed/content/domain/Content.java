@@ -66,23 +66,14 @@ public class Content {
     private LocalDateTime createdAt;
 
     public void incrementViewCount() {
-        if (viewCount == null) {
-            viewCount = 0L;
-        }
         this.viewCount++;
     }
 
     public void incrementLikeCount() {
-        if (likeCount == null) {
-            likeCount = 0L;
-        }
         this.likeCount++;
     }
 
     public void incrementShareCount() {
-        if (shareCount == null) {
-            shareCount = 0L;
-        }
         this.shareCount++;
     }
 
