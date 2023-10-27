@@ -52,7 +52,7 @@ public class Member {
      * @param hasher
      */
     public void verifyPassword(String rawPassword, PasswordHasher hasher) {
-        if (!hasher.matches(rawPassword, password)) {
+        if (!hasher.isMatch(rawPassword, password)) {
             throw new PasswordMismatchException();
         }
     }

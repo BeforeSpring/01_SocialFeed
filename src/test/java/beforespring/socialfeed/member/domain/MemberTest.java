@@ -23,7 +23,7 @@ class MemberTest {
             }
 
             @Override
-            public boolean matches(String raw, String hashed) {
+            public boolean isMatch(String raw, String hashed) {
                 return hash(raw).equals(hashed);
             }
         };
