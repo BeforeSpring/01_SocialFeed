@@ -1,7 +1,6 @@
 ![logo](https://static.wanted.co.kr/images/events/3178/58ac3248.jpg)
 
 # 통합 소셜 피드 서비스
-여러 소셜미디어 서비스에서 특정 해시태그를 포함한 게시물을 취합, 하나의 서비스에서 조회하는 서비스.
 
 <br/>
 
