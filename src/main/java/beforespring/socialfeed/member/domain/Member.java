@@ -38,7 +38,7 @@ public class Member {
         String username,
         String raw,
         PasswordHasher hasher
-        ){
+    ) {
         this.id = id;
         this.username = username;
         this.password = hasher.hash(raw);
@@ -51,7 +51,7 @@ public class Member {
      * @param rawPassword
      * @param hasher
      */
-    public void verifyPassword(String rawPassword,PasswordHasher hasher) {
+    public void verifyPassword(String rawPassword, PasswordHasher hasher) {
         if (!hasher.matches(rawPassword, password)) {
             throw new PasswordMismatchException();
         }
@@ -64,7 +64,7 @@ public class Member {
      * @param rawPassword
      * @param hasher
      */
-    public void updatePassword(String rawPassword, PasswordValidator validator , PasswordHasher hasher) {
+    public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
         validator.validate(this, rawPassword, hasher);
         this.password = hasher.hash(rawPassword);
     }
