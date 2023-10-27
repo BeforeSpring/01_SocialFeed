@@ -72,4 +72,13 @@ public class Member {
         validator.validate(this, rawPassword, hasher);
         this.password = hasher.hash(rawPassword);
     }
+
+    /**
+     * 가입 승인 시 상태값 업데이트
+     *
+     * @param status 변경할 상태값
+     */
+    public void updateConfirmStatus(ConfirmStatus status) {
+        this.status = status;
+    }
 }
