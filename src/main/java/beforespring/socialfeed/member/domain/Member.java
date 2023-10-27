@@ -31,6 +31,9 @@ public class Member {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ConfirmStatus status;
 
     @Builder
     protected Member(
@@ -42,6 +45,7 @@ public class Member {
         this.id = id;
         this.username = username;
         this.password = hasher.hash(raw);
+        this.status = ConfirmStatus.UNAUTHORIZED;
     }
 
     /**
