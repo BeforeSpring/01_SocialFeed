@@ -60,6 +60,9 @@ public class Content {
     private LocalDateTime createdAt;
 
     public void incrementViewCount() {
+        if (viewCount == null) {
+            viewCount = 0L;
+        }
         this.viewCount++;
     }
 
@@ -71,6 +74,9 @@ public class Content {
     }
 
     public void incrementShareCount() {
+        if (shareCount == null) {
+            shareCount = 0L;
+        }
         this.shareCount++;
     }
 
