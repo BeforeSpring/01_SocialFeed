@@ -26,17 +26,17 @@
 ## 기반 기술
 ![Static Badge](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=appveyor?logo=null) ![Static Badge](https://img.shields.io/badge/SpringBoot-2.7.17-yellow?style=for-the-badge&logo=appveyor?logo=null) ![Static Badge](https://img.shields.io/badge/H2-embedded-blue?style=for-the-badge&logo=appveyor?logo=null) 
 <br/>
-- 언어
+- **언어**
   - Java 17
-- 웹 프레임워크
+- **웹 프레임워크**
   - SpringBoot 2.7.17
-- DB 접근 기술
+- **DB 접근 기술**
   - Spring Data JPA
   - Spring JDBC *(Bulk Insert시 쿼리 성능을 위해 사용)*
   - QueryDSL
-- DBMS
+- **DBMS**
   - H2 *(SpringBoot embedded)*
-    - *(JPA와 ANSI표준 SQL문 사용으로, 대부분의 RDMBS와 호환될 것으로 생각됨.)*
+  - *(JPA와 ANSI표준 SQL문 사용으로, 대부분의 RDBMS와 호환될 것으로 생각됨.)*
 
 <br/>
 
