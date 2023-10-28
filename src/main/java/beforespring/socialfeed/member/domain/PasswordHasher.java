@@ -2,7 +2,6 @@ package beforespring.socialfeed.member.domain;
 
 public interface PasswordHasher {
 
-    String hash(String toHash);
-
-    boolean matches(String raw, String hashed);
+    String hash(String rawPassword);
+    boolean isMatch(String raw, String hashed);
 }
