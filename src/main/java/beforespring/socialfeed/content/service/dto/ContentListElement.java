@@ -18,6 +18,7 @@ import lombok.Builder;
  * @param createdAt
  */
 public record ContentListElement(
+    Long id,
     String contentId,
     ContentSourceType type,
     String title,
