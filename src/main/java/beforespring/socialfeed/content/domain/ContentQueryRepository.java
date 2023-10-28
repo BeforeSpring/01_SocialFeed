@@ -1,8 +1,5 @@
 package beforespring.socialfeed.content.domain;
 
-import java.util.List;
-
-
 public interface ContentQueryRepository {
 
     /**
@@ -20,8 +17,8 @@ public interface ContentQueryRepository {
      * </p>
      *
      * @param queryParameter ContentQueryParameter 참조.
-     * @return list of contents (최대 size: queryParameter.size + 1)
+     * @return ContentQueryResult&lt;Content&gt;
      * @see ContentQueryParameter
      */
-    List<Content> findByHashtag(ContentQueryParameter queryParameter);
+    ContentQueryResult<Content> findByHashtag(ContentQueryParameter queryParameter);
 }

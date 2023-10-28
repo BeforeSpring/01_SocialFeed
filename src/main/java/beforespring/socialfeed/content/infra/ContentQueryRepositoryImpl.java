@@ -6,6 +6,7 @@ import static beforespring.socialfeed.content.domain.QHashtagContent.hashtagCont
 import beforespring.socialfeed.content.domain.Content;
 import beforespring.socialfeed.content.domain.ContentQueryParameter;
 import beforespring.socialfeed.content.domain.ContentQueryRepository;
+import beforespring.socialfeed.content.domain.ContentQueryResult;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,18 +19,31 @@ import org.springframework.stereotype.Repository;
 public class ContentQueryRepositoryImpl implements ContentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final ContentQueryMapper contentQueryMapper;
 
-    public ContentQueryRepositoryImpl(EntityManager em) {
+    public ContentQueryRepositoryImpl(
+        EntityManager em,
+        ContentQueryMapper contentQueryMapper
+    ) {
         this.queryFactory = new JPAQueryFactory(em);
+        this.contentQueryMapper = contentQueryMapper;
     }
 
     @Override
-    public List<Content> findByHashtag(ContentQueryParameter queryParameter) {
+    public ContentQueryResult<Content> findByHashtag(ContentQueryParameter queryParameter) {
+        return contentQueryMapper
+                   .mapToContentQueryResult(
+                       findContentsByQueryParam(queryParameter),
+                       queryParameter.size()
+                   );
+    }
+
+    List<Content> findContentsByQueryParam(ContentQueryParameter queryParameter) {
         BooleanExpression condition =
             queryParameter.from() == null ? null
                 : createdBefore(queryParameter.from());
 
-        return findByHashtagQuery(
+        return findContents(
             queryParameter.hashtag(),
             queryParameter.size(),
             queryParameter.offset(),
@@ -51,7 +65,7 @@ public class ContentQueryRepositoryImpl implements ContentQueryRepository {
      * @param condition 커스텀 가능한 where 조건문. And 조건으로 작동함.
      * @return List of Content
      */
-    private List<Content> findByHashtagQuery(
+    private List<Content> findContents(
         String hashtag,
         int size,
         int offset,
