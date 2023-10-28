@@ -1,5 +1,6 @@
 package beforespring.socialfeed.member.domain;
 
+import beforespring.socialfeed.member.exception.TokenMismatchException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,8 @@ import javax.persistence.*;
     name = "confirm",
     indexes = {
         @Index(
-            name = "idx__confirm__memberId",
-            columnList = "memberId",
+            name = "idx__confirm__member_id",
+            columnList = "member_id",
             unique = true
         )
     }
@@ -23,11 +24,11 @@ import javax.persistence.*;
 public class Confirm {
 
     @Id
-    @Column(name = "confirmId")
+    @Column(name = "confirm_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "member_id")
     private Member member;
     @Column(nullable = false)
     private String token;
@@ -38,8 +39,18 @@ public class Confirm {
         this.token = token;
     }
 
-    public void updateToken(String Token) {
+    public void updateToken(String token) {
         this.token = token;
+    }
+
+    /**
+     * 생성된 토큰과 사용자가 입력한 토큰이 동일한지 검증
+     *
+     * @param token
+     */
+    public void verifyToken(String token) {
+        if (!this.token.equals(token))
+            throw new TokenMismatchException();
     }
 
 }
