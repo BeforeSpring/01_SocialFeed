@@ -1,10 +1,14 @@
-package beforespring.socialfeed.content.domain;
+package beforespring.socialfeed.content.infra;
 
 import static beforespring.Fixture.randString;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 
 import beforespring.Fixture;
-import beforespring.socialfeed.content.infra.ContentQueryRepositoryImpl;
+import beforespring.socialfeed.content.domain.Content;
+import beforespring.socialfeed.content.domain.ContentQueryParameter;
+import beforespring.socialfeed.content.domain.HashtagContent;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -12,11 +16,18 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 // todo 테스트 케이스 보완 (한 content에 여러 hashtag가 설정된 경우 등)
 @DataJpaTest
+@ExtendWith(MockitoExtension.class)
 class ContentQueryRepositoryImplTest {
 
     @PersistenceContext
@@ -64,13 +75,49 @@ class ContentQueryRepositoryImplTest {
         em.flush();
     }
 
+    @Mock
+    ContentQueryMapper mockContentQueryMapper;
+
     @BeforeEach
     void init() {
-        contentQueryRepository = new ContentQueryRepositoryImpl(em);
+        contentQueryRepository = new ContentQueryRepositoryImpl(em, mockContentQueryMapper);
+    }
+
+    @Captor
+    ArgumentCaptor<List<Content>> listContentArgumentCaptor;
+
+    @Test
+    @DisplayName("ContentQueryMapper에 인자를 잘 넘겼는지 확인.")
+    void findByHashtag_calling_mapper_test() {
+        // given
+        String givenHashtag = randString();
+        int givenContentSets = 10;  // 2배만큼 생성됨. (10개 현재 시점에 동시 생성, 10개 랜덤한 과거에 생성)
+        int givenSize = 5;
+        initDummyData(givenHashtag, givenContentSets);  // givenHashtag로 생성
+        ContentQueryParameter givenParam = ContentQueryParameter.builder()
+                                               .size(givenSize)  // 10개 가져오기
+                                               .from(null)
+                                               .offset(0)
+                                               .hashtag(givenHashtag)
+                                               .build();
+
+        List<Content> expectedQueryResult = contentQueryRepository.findContentsByQueryParam(
+            givenParam);  // 매핑되기 전 쿼리 결과물
+
+        // when
+        contentQueryRepository.findByHashtag(givenParam);
+
+        // then
+        verify(mockContentQueryMapper).mapToContentQueryResult(listContentArgumentCaptor.capture(),
+            eq(givenParam.size()));
+        assertThat(listContentArgumentCaptor.getValue())
+            .describedAs("매퍼 객체에 결과물을 잘 넘겼는지 확인.")
+            .containsExactlyElementsOf(expectedQueryResult);
+
     }
 
     @Test
-    void findByHashtag() {
+    void query_test() {
         // given
         String givenHashtag = randString();
         int givenContentSets = 10;  // 2배만큼 생성됨. (10개 현재 시점에 동시 생성, 10개 랜덤한 과거에 생성)
@@ -103,9 +150,9 @@ class ContentQueryRepositoryImplTest {
                                                            .build();
 
         // when
-        List<Content> noOffsetResult = contentQueryRepository.findByHashtag(noOffsetParam);
-        List<Content> halfOffsetResult = contentQueryRepository.findByHashtag(halfOffsetParam);
-        List<Content> noOffsetLargeSizeResult = contentQueryRepository.findByHashtag(
+        List<Content> noOffsetResult = contentQueryRepository.findContentsByQueryParam(noOffsetParam);
+        List<Content> halfOffsetResult = contentQueryRepository.findContentsByQueryParam(halfOffsetParam);
+        List<Content> noOffsetLargeSizeResult = contentQueryRepository.findContentsByQueryParam(
             noOffsetLargeSizeParam);
 
         // then
