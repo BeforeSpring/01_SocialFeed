@@ -30,6 +30,13 @@ public class MemberController {
         return new CreateMemberDto.Response(memberId);
     }
 
+    /**
+     * 가입 승인 요청시 사용될 메서드입니다.
+     * request로 받은 유저의 정보를 토대로
+     * joinConfirm service를 호출합니다.
+     * @param request
+     * @return 정상 작동시 200 ok를 리턴하게 됩니다.
+     */
     @PostMapping("/api/member/confirm")
     public ResponseEntity<?> signupMember(@RequestBody @Valid SignupMemberDto.Request request) {
         memberService.joinConfirm(request.getUserName(), request.getPassword(), request.getToken());
