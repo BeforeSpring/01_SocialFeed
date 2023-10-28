@@ -13,10 +13,12 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 해시태그 검색용 테이블

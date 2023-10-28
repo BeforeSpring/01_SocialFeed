@@ -31,6 +31,9 @@ public class Member {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ConfirmStatus status;
 
     @Builder
     protected Member(
@@ -42,6 +45,7 @@ public class Member {
         this.id = id;
         this.username = username;
         this.password = hasher.hash(raw);
+        this.status = ConfirmStatus.UNAUTHORIZED;
     }
 
     /**
@@ -67,5 +71,13 @@ public class Member {
     public void updatePassword(String rawPassword, PasswordValidator validator, PasswordHasher hasher) {
         validator.validate(this, rawPassword, hasher);
         this.password = hasher.hash(rawPassword);
+    }
+
+    /**
+     * 가입 승인 시 상태를 승인으로 변경
+     */
+    public void joinConfirm() {
+        if (this.status == ConfirmStatus.UNAUTHORIZED)
+            this.status = ConfirmStatus.AUTHORIZED;
     }
 }
