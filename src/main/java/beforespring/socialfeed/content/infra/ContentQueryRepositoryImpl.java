@@ -38,6 +38,20 @@ public class ContentQueryRepositoryImpl implements ContentQueryRepository {
                    );
     }
 
+    @Override
+    public List<String> findMostPopularHashtagsIn(long minutes, int howMany) {
+        LocalDateTime now = LocalDateTime.now();
+        return queryFactory
+                   .select(hashtagContent.hashtag)
+                   .from(hashtagContent)
+                   .groupBy(hashtagContent.hashtag)
+                   .where(hashtagContent.createdAt.between(now.minusMinutes(minutes), now))
+                   .orderBy(hashtagContent.hashtag.count().desc())
+                   .limit(howMany)
+                   .fetch()
+            ;
+    }
+
     List<Content> findContentsByQueryParam(ContentQueryParameter queryParameter) {
         BooleanExpression condition =
             queryParameter.from() == null ? null

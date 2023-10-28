@@ -81,4 +81,22 @@ class ContentQueryServiceImplTest {
             .describedAs("모두 변환 요청이 되었는지 확인")
             .containsExactlyInAnyOrderElementsOf(givenContents);
     }
+
+    @Test
+    void hotHashtags() {
+        long givenMinutes = 180L;
+        int givenHowMany = 20;
+        // given
+        List<String> givenRes = List.of("a", "b", "c");
+        given(contentQueryRepository.findMostPopularHashtagsIn(givenMinutes, givenHowMany))
+            .willReturn(givenRes);
+
+        // when
+        List<String> res = contentQueryService.hotHashtags(givenMinutes, givenHowMany);
+
+        // then
+        verify(contentQueryRepository).findMostPopularHashtagsIn(givenMinutes, givenHowMany);
+        assertThat(res)
+            .containsExactlyElementsOf(givenRes);
+    }
 }
