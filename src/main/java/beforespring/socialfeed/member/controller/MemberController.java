@@ -5,6 +5,8 @@ import beforespring.socialfeed.member.controller.dto.SignupMemberDto;
 import beforespring.socialfeed.member.domain.Member;
 import beforespring.socialfeed.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,9 +33,9 @@ public class MemberController {
     }
 
     @PostMapping("/api/member/signup/{token}")
-    public void signupMember(@RequestBody @Valid SignupMemberDto.Request request, @PathVariable("token") Long token) {
-        Member member = Member.builder()
-
-        memberService.joinConfirm();
+    public ResponseEntity<?> signupMember(@RequestBody @Valid SignupMemberDto.Request request, @PathVariable("token") String token) {
+        Member member = memberService.findById(request.getId());
+        memberService.joinConfirm(member.getUsername(), member.getPassword(), token);
+        return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.OK);
     }
 }
