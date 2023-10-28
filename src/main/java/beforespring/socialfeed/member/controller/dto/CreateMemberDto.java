@@ -20,7 +20,7 @@ public class CreateMemberDto {
      */
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    static public class Request {
+    static public class CreateMemberRequest {
         @NotEmpty
         private String username;
         @NotEmpty
@@ -30,7 +30,7 @@ public class CreateMemberDto {
         @Size(min = 10, message = "비밀번호는 최소 10자 이상이어야 합니다.")
         private String password;
 
-        public Request(String username, String email, String password) {
+        public CreateMemberRequest(String username, String email, String password) {
             this.username = username;
             this.email = email;
             validatePasswordPattern(password);
@@ -81,10 +81,10 @@ public class CreateMemberDto {
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    static public class Response {
+    static public class CreateMemberResponse {
         private Long id;
 
-        public Response(Long id) {
+        public CreateMemberResponse(Long id) {
             this.id = id;
         }
     }
