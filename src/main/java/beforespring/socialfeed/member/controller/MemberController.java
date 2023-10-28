@@ -1,6 +1,5 @@
 package beforespring.socialfeed.member.controller;
 
-import beforespring.socialfeed.member.controller.dto.CreateMemberDto;
 import beforespring.socialfeed.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +24,8 @@ public class MemberController {
      * @return 생성된 멤버의 아이디를 반환합니다.
      */
     @PostMapping("/api/member/new")
-    public CreateMemberDto.Response createMember(@RequestBody @Valid CreateMemberDto.Request request) {
+    public CreateMemberResponse createMember(@RequestBody @Valid CreateMemberRequest request) {
         Long memberId = memberService.join(request);
-        return new CreateMemberDto.Response(memberId);
+        return new CreateMemberResponse(memberId);
     }
 }
