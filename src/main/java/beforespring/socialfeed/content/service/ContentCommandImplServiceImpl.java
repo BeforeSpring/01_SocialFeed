@@ -46,6 +46,7 @@ public class ContentCommandImplServiceImpl implements ContentCommandService {
     public void like(Long contentId) {
         Content content = contentRepository.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException());
+        content.incrementLikeCount();
     }
 
     @Override
