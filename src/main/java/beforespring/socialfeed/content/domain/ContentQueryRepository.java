@@ -2,7 +2,6 @@ package beforespring.socialfeed.content.domain;
 
 import java.util.List;
 
-
 public interface ContentQueryRepository {
 
     /**
@@ -20,8 +19,16 @@ public interface ContentQueryRepository {
      * </p>
      *
      * @param queryParameter ContentQueryParameter 참조.
-     * @return list of contents (최대 size: queryParameter.size + 1)
+     * @return ContentQueryResult&lt;Content&gt;
      * @see ContentQueryParameter
      */
-    List<Content> findByHashtag(ContentQueryParameter queryParameter);
+    ContentQueryResult<Content> findByHashtag(ContentQueryParameter queryParameter);
+
+    /**
+     * 최근 minutes 분 동안 가장 인기있는 해시태그 목록 반환
+     * @param minutes 현재 ~ 현재 - minutes 사이를 대상으로 집계함.
+     * @param howMany 반환될 해시태그의 숫자.
+     * @return 최근 게시물에 가장 많이 태그된 해시태그 목록을 태그 숫자가 가장 많은 순으로 반환함.
+     */
+    List<String> findMostPopularHashtagsIn(long minutes, int howMany);
 }
