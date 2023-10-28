@@ -35,9 +35,15 @@ public class ContentQueryServiceImpl implements ContentQueryService {
         return null;
     }
 
+    /**
+     * 기능만 우선 구현함.
+     * 부하를 고려하여 일정 시간마다 쿼리를 캐싱할 필요가 있음.
+     *
+     * @return
+     */
     @Override
-    public List<String> hotHashtags() {
-        return null;
+    public List<String> hotHashtags(long minutes, int howMany) {
+        return contentQueryRepository.findMostPopularHashtagsIn(minutes, howMany);
     }
 
     @Override

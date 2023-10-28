@@ -1,6 +1,9 @@
 package beforespring.socialfeed.content.infra;
 
+import static beforespring.Fixture.aContent;
 import static beforespring.Fixture.randString;
+import static beforespring.Fixture.random;
+import static beforespring.Fixture.randomPositiveLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -117,7 +120,7 @@ class ContentQueryRepositoryImplTest {
     }
 
     @Test
-    void query_test() {
+    void findContentsByQueryParam() {
         // given
         String givenHashtag = randString();
         int givenContentSets = 10;  // 2배만큼 생성됨. (10개 현재 시점에 동시 생성, 10개 랜덤한 과거에 생성)
@@ -150,8 +153,10 @@ class ContentQueryRepositoryImplTest {
                                                            .build();
 
         // when
-        List<Content> noOffsetResult = contentQueryRepository.findContentsByQueryParam(noOffsetParam);
-        List<Content> halfOffsetResult = contentQueryRepository.findContentsByQueryParam(halfOffsetParam);
+        List<Content> noOffsetResult = contentQueryRepository.findContentsByQueryParam(
+            noOffsetParam);
+        List<Content> halfOffsetResult = contentQueryRepository.findContentsByQueryParam(
+            halfOffsetParam);
         List<Content> noOffsetLargeSizeResult = contentQueryRepository.findContentsByQueryParam(
             noOffsetLargeSizeParam);
 
@@ -179,5 +184,104 @@ class ContentQueryRepositoryImplTest {
             .describedAs(
                 "givenHashtag에 해당하는 정보보다 더 많은 size로 요청했을 때, 총 size가 일치하지 않는 경우 다른 해시태그를 불러왔거나 불러와야할 일부 검색결과를 불러오지 않았다는 의미임.")
             .hasSize(givenContentSets * 2);
+    }
+
+    /**
+     * <ol>
+     *     <li>최근(현재 - 10분 ~ 현재 - givenTime분) 사이의 데이터 생성</li>
+     *     <li>쿼리 대상에 포함되지 않는 과거(현재 - givenTime분 ~ 현재 - 100만분) 사이의 데이터 생성</li>
+     * </ol>
+     * @param now 현재 시각
+     * @param givenTime 위 설명 참조
+     * @param hashtagCntBase 생성될 해시태그의 총 숫자
+     * @param recentCnt 생성될 최근 데이터의 수 (과거 데이터는 hashtagCntBase - recentCnt 만큼 생성됨.)
+     * @param hashtag 해시태그
+     */
+    void mostPopularHashtags_init(
+        LocalDateTime now,
+        long givenTime,
+        int hashtagCntBase,
+        int recentCnt,
+        String hashtag
+    ) {
+        // 기준 시간 이내 태그된 해시태그 생성
+        Stream.generate(() -> HashtagContent.builder()
+                                  .hashtag(hashtag)
+                                  .content(aContent().id(randomPositiveLong()).build())
+                                  .createdAt(now.minusMinutes(random.nextLong(10, givenTime)))
+                                  .build())
+            .limit(recentCnt)
+            .forEach(em::persist);
+
+        // 기준 시간 이전 태그된 해시태그 생성
+        Stream.generate(() -> HashtagContent.builder()
+                                  .hashtag(hashtag)
+                                  .content(aContent().id(randomPositiveLong()).build())
+                                  .createdAt(now.minusMinutes(random.nextLong(givenTime, 1000000)))
+                                  .build())
+            .limit(hashtagCntBase - recentCnt)
+            .forEach(em::persist);
+    }
+
+    /**
+     * 최근 3시간 이내 상위 3개의 해시태그를 찾는 테스트 A: 3시간 이내 10개, 그 이전 30개. B: 3시간 이내 20개, 그 이전 20개. ... D: 3시간 이내
+     * 40개, 그 이전 40개.
+     */
+    @Test
+    void findMostPopularHashtagsIn() {
+        LocalDateTime now = LocalDateTime.now();
+        long givenTime = 180;
+        int hashtagCntBase = 40;
+
+        String hashtagA = randString() + "hashtagA";
+        int hashtagACnt = 10;
+
+        String hashtagB = randString() + "hashtagB";
+        int hashtagBCnt = 20;
+
+        String hashtagC = randString() + "hashtagC";
+        int hashtagCCnt = 30;
+
+        String hashtagD = randString() + "hashtagD";
+        int hashtagDCnt = 40;
+
+        mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagACnt, hashtagA);
+        mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagBCnt, hashtagB);
+        mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagCCnt, hashtagC);
+        mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagDCnt, hashtagD);
+
+        List<String> mostPopularHashtagsIn = contentQueryRepository.findMostPopularHashtagsIn(180, 3);
+
+        assertThat(mostPopularHashtagsIn)
+            .describedAs("총 3개만 불러와야함.")
+            .hasSize(3)
+            .describedAs("태그가 많이 된 순서대로 정렬돼야함.")
+            .containsExactlyElementsOf(List.of(hashtagD, hashtagC, hashtagB));
+    }
+
+    /**
+     * 시간 내에 해당되는 결과가 없을 때 테스트
+     */
+    @Test
+    void findMostPopularHashtagsIn_empty_result() {
+        LocalDateTime now = LocalDateTime.now();
+        long givenTime = 180;
+        int hashtagCntBase = 40;
+
+        String hashtagA = randString() + "hashtagA";
+        int hashtagACnt = 10;
+
+        String hashtagB = randString() + "hashtagB";
+        int hashtagBCnt = 20;
+
+        mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagACnt, hashtagA);
+        mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagBCnt, hashtagB);
+
+        List<String> mostPopularHashtagsIn = contentQueryRepository.findMostPopularHashtagsIn(5, 3);  // 5분 내의 데이터는 생성되지 않음.
+
+        assertThat(mostPopularHashtagsIn)
+            .describedAs("null이 아니고, 비어있어야함.")
+            .isNotNull()
+            .isEmpty();
     }
 }
