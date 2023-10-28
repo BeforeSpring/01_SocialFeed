@@ -1,10 +1,9 @@
-package beforespring.socialfeed.member.domain;
+package beforespring.socialfeed.member.infra;
+
+import beforespring.socialfeed.member.domain.TokenSender;
 
 import java.util.Random;
 
-/**
- * 메서드가 정적으로 선언되어진 이유는 서비스와 독립적으로 기능을 할 수 있도록 구현하였고, 일회성으로 동작하기 때문입니다.
- */
 public class TokenSenderImpl implements TokenSender {
 
     @Override
