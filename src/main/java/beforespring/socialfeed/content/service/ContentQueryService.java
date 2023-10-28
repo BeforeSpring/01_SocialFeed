@@ -1,11 +1,11 @@
 package beforespring.socialfeed.content.service;
 
+import beforespring.socialfeed.content.domain.ContentQueryParameter;
+import beforespring.socialfeed.content.domain.ContentQueryResult;
 import beforespring.socialfeed.content.service.dto.ContentListElement;
-import beforespring.socialfeed.content.service.dto.ContentListQueryParameter;
 import beforespring.socialfeed.content.service.dto.ContentStatisticsData;
 import beforespring.socialfeed.content.service.dto.ContentStatisticsQueryParameter;
 import java.util.List;
-import org.springframework.data.domain.Page;
 
 public interface ContentQueryService {
 
@@ -18,12 +18,13 @@ public interface ContentQueryService {
      * </li>
      * </p>
      *
-     * <p>Spring 프레임워크에서 제공하는 Page 인터페이스 활용.</p>
      *
-     * @param contentListQueryParameter
+     * @param queryParameter
      * @return 페이지 정보와 ContentListElement가 포함된 Page 객체
+     * @see ContentQueryParameter
+     * @see ContentQueryResult
      */
-    Page<ContentListElement> getContentList(ContentListQueryParameter queryParameter);
+    ContentQueryResult<ContentListElement> getContentList(ContentQueryParameter queryParameter);
 
     /**
      * <p>통계 API</p>
@@ -34,11 +35,12 @@ public interface ContentQueryService {
     ContentStatisticsData getContentStatistics(ContentStatisticsQueryParameter queryParameter);
 
     /**
-     * 3시간 동안 가장 많이 사용된 Tag 추천
-     *
-     * @return
+     * 일정 기간 내 가장 많이 사용된 해시태그 목록
+     * @param minutes
+     * @param howMany
+     * @return minutes 분 이내 가장 많이 사용된 해시태그 중, 상위 howMany 개 만큼 반환함. 사용수 기준으로 정렬.
      */
-    List<String> hotHashtags();
+    List<String> hotHashtags(long minutes, int howMany);
 
     /**
      * 단기간 내 조회수 급상승

@@ -73,13 +73,14 @@ class ContentCommandImplServiceImplTest {
     void testLike() {
         Content content = Content.builder()
             .id(1L)
+            .likeCount(1L)
             .build();
 
         when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
 
         contentService.like(1L);
 
-        assertEquals(1L, content.getLikeCount());
+        assertEquals(2L, content.getLikeCount());
     }
 
     @Test
