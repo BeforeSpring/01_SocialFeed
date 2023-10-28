@@ -16,10 +16,18 @@ public class SignupMemberDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     static public class Request {
         @NotEmpty
-        Long id;
+        String userName;
 
-        public Request(Long id) {
-            this.id = id;
+        @NotEmpty
+        String password;
+
+        @NotEmpty
+        String token;
+
+        public Request(String userName, String password, String token) {
+            this.userName = userName;
+            this.password = password;
+            this.token = token;
         }
     }
 }
