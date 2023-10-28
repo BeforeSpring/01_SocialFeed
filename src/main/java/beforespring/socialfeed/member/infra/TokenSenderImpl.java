@@ -1,14 +1,17 @@
 package beforespring.socialfeed.member.infra;
 
 import beforespring.socialfeed.member.domain.TokenSender;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Random;
 
+@Slf4j
 public class TokenSenderImpl implements TokenSender {
+    Random random = new Random();
 
     @Override
     public void sendEmail(String email, String token) {
-        System.out.println("회원 가입을 완료하려면 인증 코드를 입력해주세요.\n인증코드: " + token);
+        log.info("회원 가입을 완료하려면 인증 코드를 입력해주세요.\n인증코드: " + token);
     }
 
     /**
@@ -19,7 +22,6 @@ public class TokenSenderImpl implements TokenSender {
     @Override
     public String generateToken() {
         StringBuilder code = new StringBuilder();
-        Random random = new Random();
         for (int i = 0; i < 6; i++)
             code.append(random.nextInt(10));
         return code.toString();
