@@ -1,11 +1,11 @@
 package beforespring.socialfeed.content.service;
 
+import beforespring.socialfeed.content.domain.ContentQueryParameter;
+import beforespring.socialfeed.content.domain.ContentQueryResult;
 import beforespring.socialfeed.content.service.dto.ContentListElement;
-import beforespring.socialfeed.content.service.dto.ContentListQueryParameter;
 import beforespring.socialfeed.content.service.dto.ContentStatisticsData;
 import beforespring.socialfeed.content.service.dto.ContentStatisticsQueryParameter;
 import java.util.List;
-import org.springframework.data.domain.Page;
 
 public interface ContentQueryService {
 
@@ -18,12 +18,13 @@ public interface ContentQueryService {
      * </li>
      * </p>
      *
-     * <p>Spring 프레임워크에서 제공하는 Page 인터페이스 활용.</p>
      *
-     * @param contentListQueryParameter
+     * @param queryParameter
      * @return 페이지 정보와 ContentListElement가 포함된 Page 객체
+     * @see ContentQueryParameter
+     * @see ContentQueryResult
      */
-    Page<ContentListElement> getContentList(ContentListQueryParameter queryParameter);
+    ContentQueryResult<ContentListElement> getContentList(ContentQueryParameter queryParameter);
 
     /**
      * <p>통계 API</p>
