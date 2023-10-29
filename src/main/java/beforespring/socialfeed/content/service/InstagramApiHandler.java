@@ -6,19 +6,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class FacebookApiHandler implements ExternalApiHandler {
+public class InstagramApiHandler implements ExternalApiHandler {
     @Override
     public ContentSourceType getSourceType() {
-        return ContentSourceType.FACEBOOK;
+        return ContentSourceType.INSTAGRAM;
     }
 
     @Override
     public void like(String contentSourceId) {
-        log.info("Facebook like contentSourceId: {}", contentSourceId);
+        log.info("Instagram like contentSourceId: {}", contentSourceId);
     }
 
     @Override
     public void share(String contentSourceId) {
-        log.info("Facebook share contentSourceId: {}", contentSourceId);
+        log.info("Instagram share contentSourceId: {}", contentSourceId);
     }
 }
