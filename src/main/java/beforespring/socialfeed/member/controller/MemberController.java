@@ -1,8 +1,6 @@
 package beforespring.socialfeed.member.controller;
 
-import beforespring.socialfeed.member.controller.dto.CreateMemberDto;
-import beforespring.socialfeed.member.controller.dto.SignupMemberDto;
-import beforespring.socialfeed.member.infra.TmpMemberServiceImpl;
+import beforespring.socialfeed.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.*;
 import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberResponse;
 
@@ -17,7 +16,7 @@ import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.Crea
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final TmpMemberServiceImpl memberService;
+    private final MemberService memberService;
 
     /**
      * 멤버 생성. 가입 요청과 가입 승인 서비스를 호출합니다.
@@ -39,7 +38,7 @@ public class MemberController {
      * @param request
      */
     @PostMapping("/api/member/confirm")
-    public void signupMember(@RequestBody @Valid SignupMemberDto.Request request) {
-        memberService.joinConfirm(request.getUserName(), request.getPassword(), request.getToken());
+    public void signupMember(@RequestBody @Valid ConfirmTokenRequest request) {
+        memberService.joinConfirm(request);
     }
 }
