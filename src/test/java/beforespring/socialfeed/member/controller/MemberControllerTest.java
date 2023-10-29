@@ -1,5 +1,10 @@
 package beforespring.socialfeed.member.controller;
 
+import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import beforespring.socialfeed.content.controller.ContentController;
 import beforespring.socialfeed.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,14 +12,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class MemberControllerTest {
@@ -32,6 +40,28 @@ class MemberControllerTest {
 
     @MockBean
     MemberService memberService;
+
+    @TestConfiguration
+    static class SecurityConf {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+            httpSecurity
+                .authorizeHttpRequests(authorizeHttpRequestsCustomizer())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(conf -> conf.configure(httpSecurity))
+            ;
+
+            return httpSecurity.build();
+        }
+
+        private static Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authorizeHttpRequestsCustomizer() {
+            return auth -> {
+                auth.anyRequest().permitAll();
+            };
+        }
+    }
+
 
     /**
      * 멤버 등록에 적절한 데이터를 가지고 등록 URL 호출시
