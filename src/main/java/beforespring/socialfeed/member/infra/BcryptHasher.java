@@ -2,7 +2,9 @@ package beforespring.socialfeed.member.infra;
 
 import beforespring.socialfeed.member.domain.PasswordHasher;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BcryptHasher implements PasswordHasher {
 
     /**
