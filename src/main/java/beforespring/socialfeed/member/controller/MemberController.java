@@ -4,8 +4,6 @@ import beforespring.socialfeed.member.controller.dto.CreateMemberDto;
 import beforespring.socialfeed.member.controller.dto.SignupMemberDto;
 import beforespring.socialfeed.member.infra.TmpMemberServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,12 +32,11 @@ public class MemberController {
      * 가입 승인 요청시 사용될 메서드입니다.
      * request로 받은 유저의 정보를 토대로
      * joinConfirm service를 호출합니다.
+     *
      * @param request
-     * @return 정상 작동시 200 ok를 리턴하게 됩니다.
      */
     @PostMapping("/api/member/confirm")
-    public ResponseEntity<?> signupMember(@RequestBody @Valid SignupMemberDto.Request request) {
+    public void signupMember(@RequestBody @Valid SignupMemberDto.Request request) {
         memberService.joinConfirm(request.getUserName(), request.getPassword(), request.getToken());
-        return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.OK);
     }
 }
