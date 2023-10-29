@@ -1,11 +1,17 @@
 package beforespring.socialfeed.member.service;
 
+import beforespring.Fixture;
+import beforespring.socialfeed.jwt.domain.AuthToken;
 import beforespring.socialfeed.member.domain.*;
 import beforespring.socialfeed.member.exception.PasswordMismatchException;
 import beforespring.socialfeed.member.exception.TokenMismatchException;
 import beforespring.socialfeed.member.infra.TokenSenderImpl;
+import beforespring.socialfeed.member.service.dto.PasswordAuth;
+import beforespring.socialfeed.member.service.dto.RefreshTokenAuth;
 import beforespring.socialfeed.member.service.exception.ConfirmNotFoundException;
 import beforespring.socialfeed.member.service.exception.MemberNotFoundException;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static beforespring.Fixture.randString;
 import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
 import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,9 +35,14 @@ class MemberServiceImplTest {
     MemberRepository memberRepository;
     @Autowired
     ConfirmRepository confirmRepository;
+    @Autowired
+    PasswordHasher passwordHasher;
+    @Autowired
+    EntityManager em;
 
     private CreateMemberRequest createMemberRequest;
     private ConfirmTokenRequest confirmTokenRequest;
+
 
     @BeforeEach
     public void setup() {
@@ -136,4 +148,57 @@ class MemberServiceImplTest {
             .describedAs("비밀번호가 일치하지 않으면 가입 요청에 실패해야 합니다.");
     }
 
+    @Test
+    @DisplayName("인증 성공시 JWT 발급")
+    void authenticate_password() {
+        // given
+        String givenUsername = randString();
+        String givenPassword = randString();
+
+        Member givenMember = Member.builder()
+                           .username(givenUsername)
+                           .raw(givenPassword)
+                           .hasher(passwordHasher)
+                           .build();
+        memberRepository.save(givenMember);
+        em.flush();
+        em.clear();
+
+        // when
+        AuthToken res = memberService.authenticate(
+            new PasswordAuth(givenUsername, givenPassword));
+
+        assertThat(res).isNotNull();
+        assertThat(List.of(res.refreshToken(), res.accessToken()))
+            .doesNotContainNull();
+    }
+
+    @Test
+    @DisplayName("refresh token 인증")
+    void authenticate_refresh_token() {
+        // given
+        String givenUsername = randString();
+        String givenPassword = randString();
+
+        Member givenMember = Member.builder()
+                           .username(givenUsername)
+                           .raw(givenPassword)
+                           .hasher(passwordHasher)
+                           .build();
+        memberRepository.save(givenMember);
+        em.flush();
+        em.clear();
+
+        AuthToken authenticate = memberService.authenticate(
+            new PasswordAuth(givenUsername, givenPassword));
+
+        // when
+        AuthToken res = memberService.authenticate(
+            new RefreshTokenAuth(givenUsername, authenticate.refreshToken()));
+
+        // then
+        assertThat(res).isNotNull();
+        assertThat(List.of(res.refreshToken(), res.accessToken()))
+            .doesNotContainNull();
+    }
 }
