@@ -3,6 +3,10 @@ package beforespring.socialfeed.member.service;
 import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
 import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 
+import beforespring.socialfeed.jwt.domain.AuthToken;
+import beforespring.socialfeed.member.service.dto.PasswordAuth;
+import beforespring.socialfeed.member.service.dto.RefreshTokenAuth;
+
 public interface MemberService {
 
     /**
@@ -19,4 +23,19 @@ public interface MemberService {
      * @param request 토큰 승인 요청 DTO
      */
     void joinConfirm(ConfirmTokenRequest request);
+
+    /**
+     * username and password authentication
+     * @param passwordAuth
+     * @return Jwt
+     */
+    AuthToken authenticate(PasswordAuth passwordAuth);
+
+    /**
+     * refresh token authentication
+     * @param refreshTokenAuth
+     * @return Jwt
+     */
+    AuthToken authenticate(RefreshTokenAuth refreshTokenAuth);
+
 }

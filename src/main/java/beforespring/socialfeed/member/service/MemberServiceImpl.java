@@ -1,6 +1,10 @@
 package beforespring.socialfeed.member.service;
 
+import beforespring.socialfeed.jwt.domain.AuthToken;
+import beforespring.socialfeed.jwt.service.JwtIssuer;
 import beforespring.socialfeed.member.domain.*;
+import beforespring.socialfeed.member.service.dto.PasswordAuth;
+import beforespring.socialfeed.member.service.dto.RefreshTokenAuth;
 import beforespring.socialfeed.member.service.exception.ConfirmNotFoundException;
 import beforespring.socialfeed.member.service.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +18,8 @@ import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.Crea
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+
+    private final JwtIssuer jwtIssuer;
 
     private final MemberRepository memberRepository;
     private final ConfirmRepository confirmRepository;
@@ -54,5 +60,19 @@ public class MemberServiceImpl implements MemberService {
         member.verifyPassword(request.getPassword(), passwordHasher);
         confirm.verifyToken(request.getToken());
         member.joinConfirm();
+    }
+
+    @Override
+    public AuthToken authenticate(PasswordAuth passwordAuth) {
+        Member member = memberRepository.findByUsername(passwordAuth.username())
+                            .orElseThrow(MemberNotFoundException::new);
+        member.verifyPassword(passwordAuth.password(), passwordHasher);
+
+        return jwtIssuer.issue(member.getId(), member.getUsername());
+    }
+
+    @Override
+    public AuthToken authenticate(RefreshTokenAuth refreshTokenAuth) {
+        return jwtIssuer.renew(refreshTokenAuth.refreshToken(), refreshTokenAuth.username());
     }
 }
