@@ -1,8 +1,7 @@
 package beforespring.socialfeed.member.service;
 
-import beforespring.socialfeed.member.controller.dto.CreateMemberDto;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 
 public interface MemberService {
 
@@ -12,14 +11,12 @@ public interface MemberService {
      * @param request 멤버 생성 요청 DTO
      * @return member id
      */
-    Long join(CreateMemberDto.Request request);
+    Long join(CreateMemberRequest request);
 
     /**
      * 가입 승인
      *
-     * @param username 가입한 사용자
-     * @param password 가입한 사용자의 비밀번호
-     * @param token    이메일으로 전송된 토큰
+     * @param request 토큰 승인 요청 DTO
      */
-    void joinConfirm(String username, String password, String token);
+    void joinConfirm(ConfirmTokenRequest request);
 }

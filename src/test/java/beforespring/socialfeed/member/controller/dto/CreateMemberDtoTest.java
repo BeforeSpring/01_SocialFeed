@@ -1,9 +1,9 @@
 package beforespring.socialfeed.member.controller.dto;
 
-import beforespring.socialfeed.member.controller.dto.CreateMemberDto.Request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -18,7 +18,7 @@ class CreateMemberDtoTest {
         // when then
         assertThatCode(
             () ->
-                new Request(
+                new CreateMemberRequest(
                     givenUsername,
                     givenEmail,
                     givenPassword
@@ -39,7 +39,7 @@ class CreateMemberDtoTest {
         // when then
         assertThatThrownBy(
             () ->
-                new Request(
+                new CreateMemberRequest(
                     givenUsername,
                     givenEmail,
                     givenPassword
@@ -59,7 +59,7 @@ class CreateMemberDtoTest {
         // when then
         assertThatThrownBy(
             () ->
-                new Request(
+                new CreateMemberRequest(
                     givenUsername,
                     givenEmail,
                     givenPassword
