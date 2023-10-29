@@ -16,6 +16,7 @@ public class ExternalApiHandlerResolver {
     public ExternalApiHandlerResolver(List<ExternalApiHandler> handlers) {
         handlers.forEach(handler -> handlerMap.put(handler.getSourceType(), handler));
     }
+
     /**
      * 핸들러를 검색하여 반환.
      *
