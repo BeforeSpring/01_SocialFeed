@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import beforespring.Fixture;
 import beforespring.socialfeed.jwt.domain.RefreshToken;
 import beforespring.socialfeed.jwt.domain.exception.RefreshTokenExpirationException;
+import beforespring.socialfeed.jwt.domain.exception.RefreshTokenRenewException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -116,7 +117,8 @@ class RefreshTokenSpecificTest {
         // when then
         assertThatThrownBy(() -> givenRefreshToken.renew(100, randString() + givenName))
             .describedAs("givenName과 다른 값이기 때문에 갱신에 실패하고, 적절한 예외를 반환해야함.")
-            .isInstanceOf(RefreshTokenExpirationException.class);
+            .isInstanceOf(RefreshTokenRenewException.class)
+            .hasMessageContaining("username mismatch");
     }
 
     @Test
