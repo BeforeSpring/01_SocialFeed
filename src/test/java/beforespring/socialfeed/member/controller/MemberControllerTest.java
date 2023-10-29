@@ -1,8 +1,6 @@
 package beforespring.socialfeed.member.controller;
 
 import beforespring.socialfeed.content.controller.ContentController;
-import beforespring.socialfeed.member.controller.dto.CreateMemberDto;
-import beforespring.socialfeed.member.controller.dto.SignupMemberDto;
 import beforespring.socialfeed.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,7 +46,7 @@ class MemberControllerTest {
     @Test
     @DisplayName("데이터를 가지고 API가 호출되면 회원 등록 서비스가 실행되어야됩니다")
     void save_member_test() throws Exception {
-        CreateMemberDto.Request request = new CreateMemberDto.Request("username", "1234@etst.com", "12@12334asdf");
+        CreateMemberRequest request = new CreateMemberRequest("username", "1234@etst.com", "12@12334asdf");
 
         String requestBody = objectMapper.writeValueAsString(request);
 
@@ -60,7 +60,7 @@ class MemberControllerTest {
     @Test
     @DisplayName("데이터를 가지고 API가 호출되면 가입 승인 서비스가 실행되어야됩니다")
     void confirm_member_test() throws Exception {
-        SignupMemberDto.Request request = new SignupMemberDto.Request("username", "1234", "1234");
+        ConfirmTokenRequest request = new ConfirmTokenRequest("username", "1234", "1234");
 
         String requestBody = objectMapper.writeValueAsString(request);
 
