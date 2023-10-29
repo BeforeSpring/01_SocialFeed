@@ -2,9 +2,11 @@ package beforespring.socialfeed.member.infra;
 
 import beforespring.socialfeed.member.domain.TokenSender;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Component
 @Slf4j
 public class TokenSenderImpl implements TokenSender {
     Random random = new Random();
