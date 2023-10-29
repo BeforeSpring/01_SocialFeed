@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.*;
 import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
 import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberResponse;
 
@@ -27,5 +28,17 @@ public class MemberController {
     public CreateMemberResponse createMember(@RequestBody @Valid CreateMemberRequest request) {
         Long memberId = memberService.join(request);
         return new CreateMemberResponse(memberId);
+    }
+
+    /**
+     * 가입 승인 요청시 사용될 메서드입니다.
+     * request로 받은 유저의 정보를 토대로
+     * joinConfirm service를 호출합니다.
+     *
+     * @param request
+     */
+    @PostMapping("/api/member/confirm")
+    public void signupMember(@RequestBody @Valid ConfirmTokenRequest request) {
+        memberService.joinConfirm(request);
     }
 }
