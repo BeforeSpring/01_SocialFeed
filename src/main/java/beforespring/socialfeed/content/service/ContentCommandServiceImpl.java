@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 public class ContentCommandServiceImpl implements ContentCommandService {
     private final ContentRepository contentRepository;
+    private final ExternalApiHandlerResolver externalApiHandlerResolver;
 
     @Override
     public ContentSpecificData getContentSpecific(Long contentId) {
@@ -42,7 +43,11 @@ public class ContentCommandServiceImpl implements ContentCommandService {
     public void like(Long contentId) {
         Content content = contentRepository.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException());
+
+        ExternalApiHandler externalApiHandler = externalApiHandlerResolver.resolveHandler(content.getContentSourceType());
+
         content.incrementLikeCount();
+        externalApiHandler.like(content.getContentSourceId());
     }
 
     @Override
@@ -50,7 +55,10 @@ public class ContentCommandServiceImpl implements ContentCommandService {
         Content content = contentRepository.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException());
 
+        ExternalApiHandler externalApiHandler = externalApiHandlerResolver.resolveHandler(content.getContentSourceType());
+
         content.incrementShareCount();
+        externalApiHandler.share(content.getContentSourceId());
     }
 }
 
