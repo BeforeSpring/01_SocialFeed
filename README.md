@@ -18,7 +18,7 @@
 
 
 ## 소개
-
+여러 소셜 미디어 서비스에 올라온 게시물을 해시태그 기반으로 취합하여 통합 제공하는 서비스입니다.
 <br/>
 
 
@@ -41,6 +41,7 @@
 
 
 ## API Reference
+작성예정
 <br/>
 
 
@@ -108,6 +109,19 @@
       - 단, `contentId` 컬럼까지 인덱스에 포함될 경우, 인덱스의 크기가 커져서 전반적인 읽기 성능이 떨어지는 trade-off가 존재함. 
       - 추후 sns에서 제공하는 시간 응답 값이 어떤지 확인하고, 실제 서비스의 유즈케이스를 고려하여 다른 방안을 생각해볼것.
 
+</details>
+
+<details>
+- 외부 소셜미디어 서비스의 OpenAPI를 호출하는 과정을 추상화하였습니다. 로그 메시지를 출력하는 구현체로 대체하였습니다.
+- 구현
+    - `ExternalApiHandler` 인터페이스
+        - `ExternalApiHandler`를 통해 각 소셜 미디어 플랫폼의 API 호출을 추상화했습니다.
+            - `InstagramApiHandler` , `FacebookpiHandler` , `TreadsApiHandler` , `TwitterApiHandler`등의 구현체가 존재합니다.
+        - `getSourceType` 메서드는 각 핸들러가 어떤 소셜 미디어의 API를 다루는지 식별합니다.
+        - `like`와 `share` 메서드는 게시물에 좋아요 또는 공유를 수행합니다.
+    - `ExternalApiHandlerResolver`
+        - 내부에 `ExternalApiHandler`의 구현체가 매핑된 `Map` 인스턴스를 가지고 있으며, `sourceType`에 따라 적절한 `ExternalApiHandler`를 반환합니다.
+        - 생성자에서 `ExternalApiHandler`를 구현한 클래스들을 주입받아 `sourceType`을 기준으로 핸들러 클래스들을 매핑합니다.
 </details>
 
 <br/>
