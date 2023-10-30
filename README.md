@@ -112,7 +112,9 @@
 </details>
 
 <details>
-- 외부 소셜미디어 서비스의 OpenAPI를 호출하는 과정을 추상화하였습니다. 로그 메시지를 출력하는 구현체로 대체하였습니다.
+<summary>외부 API 호출 추상화 - click</summary>
+
+- 외부 소셜미디어 서비스의 API를 호출하는 과정을 추상화하였습니다. 로그 메시지를 출력하는 구현체로 대체하였습니다.
 - 구현
     - `ExternalApiHandler` 인터페이스
         - `ExternalApiHandler`를 통해 각 소셜 미디어 플랫폼의 API 호출을 추상화했습니다.
