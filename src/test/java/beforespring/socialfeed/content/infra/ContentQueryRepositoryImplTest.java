@@ -12,7 +12,15 @@ import beforespring.Fixture;
 import beforespring.socialfeed.content.domain.Content;
 import beforespring.socialfeed.content.domain.ContentQueryParameter;
 import beforespring.socialfeed.content.domain.HashtagContent;
+import beforespring.socialfeed.content.domain.query.ContentStatisticDataUnit;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsData;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsQueryParameter;
+import beforespring.socialfeed.content.domain.query.CountValue;
+import beforespring.socialfeed.content.domain.query.Granularity;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -191,11 +199,12 @@ class ContentQueryRepositoryImplTest {
      *     <li>최근(현재 - 10분 ~ 현재 - givenTime분) 사이의 데이터 생성</li>
      *     <li>쿼리 대상에 포함되지 않는 과거(현재 - givenTime분 ~ 현재 - 100만분) 사이의 데이터 생성</li>
      * </ol>
-     * @param now 현재 시각
-     * @param givenTime 위 설명 참조
+     *
+     * @param now            현재 시각
+     * @param givenTime      위 설명 참조
      * @param hashtagCntBase 생성될 해시태그의 총 숫자
-     * @param recentCnt 생성될 최근 데이터의 수 (과거 데이터는 hashtagCntBase - recentCnt 만큼 생성됨.)
-     * @param hashtag 해시태그
+     * @param recentCnt      생성될 최근 데이터의 수 (과거 데이터는 hashtagCntBase - recentCnt 만큼 생성됨.)
+     * @param hashtag        해시태그
      */
     void mostPopularHashtags_init(
         LocalDateTime now,
@@ -250,7 +259,8 @@ class ContentQueryRepositoryImplTest {
         mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagCCnt, hashtagC);
         mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagDCnt, hashtagD);
 
-        List<String> mostPopularHashtagsIn = contentQueryRepository.findMostPopularHashtagsIn(180, 3);
+        List<String> mostPopularHashtagsIn = contentQueryRepository.findMostPopularHashtagsIn(180,
+            3);
 
         assertThat(mostPopularHashtagsIn)
             .describedAs("총 3개만 불러와야함.")
@@ -277,11 +287,125 @@ class ContentQueryRepositoryImplTest {
         mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagACnt, hashtagA);
         mostPopularHashtags_init(now, givenTime, hashtagCntBase, hashtagBCnt, hashtagB);
 
-        List<String> mostPopularHashtagsIn = contentQueryRepository.findMostPopularHashtagsIn(5, 3);  // 5분 내의 데이터는 생성되지 않음.
+        List<String> mostPopularHashtagsIn = contentQueryRepository.findMostPopularHashtagsIn(5,
+            3);  // 5분 내의 데이터는 생성되지 않음.
 
         assertThat(mostPopularHashtagsIn)
             .describedAs("null이 아니고, 비어있어야함.")
             .isNotNull()
             .isEmpty();
+    }
+
+    LocalDateTime randomCreatedDateTime(LocalDateTime start, LocalDateTime end) {
+        Duration duration = Duration.between(start, end);
+        long minutes = duration.toMinutes();
+        return end.minusMinutes(random.nextLong(0, minutes));
+    }
+
+    List<HashtagContent> generateStatisticTestData(LocalDate start, LocalDate end, String hashtag, int howMany) {
+
+        return Stream.generate(
+                () -> {
+                    LocalDateTime createdAt = randomCreatedDateTime(start.atStartOfDay(),
+                        end.atStartOfDay());
+                    Content c = aContent()
+                                    .hashtags(hashtag)
+                                    .createdAt(createdAt)
+                                    .build();
+                    em.persist(c);
+                    HashtagContent hc = HashtagContent.builder()
+                                            .content(c)
+                                            .createdAt(createdAt)
+                                            .hashtag(hashtag)
+                                            .build();
+                    em.persist(hc);
+                    return hc;
+                }
+            ).limit(howMany)
+            .toList();
+    }
+
+    @Test
+    void statisticQueryTest() {
+        // given
+        LocalDate start = LocalDate.of(2023, 10, 1);
+        LocalDate end = LocalDate.of(2023, 10, 7);
+
+        String givenHashtag = "givenHashtag";
+        int[] dayCount = new int[]{3, 1, 2, 5, 8, 7, 7};
+
+        List<HashtagContent> all = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++) {
+            List<HashtagContent> generated = generateStatisticTestData(start.plusDays(i),
+                start.plusDays(i + 1), givenHashtag,
+                dayCount[i]);
+            all.addAll(generated);
+        }
+        em.flush();
+        em.clear();
+
+        Granularity[] granularities = Granularity.values();
+        CountValue[] countValues = CountValue.values();
+
+        List<ContentStatisticsQueryParameter> givenParams = new ArrayList<>();
+
+        for (CountValue countValue : countValues) {
+            for (Granularity granularity : granularities) {
+                givenParams.add(
+                    ContentStatisticsQueryParameter.builder()
+                        .hashtag(givenHashtag)
+                        .start(start)
+                        .end(end)
+                        .countValue(countValue)
+                        .granularity(granularity)
+                        .build()
+                );
+            }
+        }
+        all.sort(Comparator.comparing(HashtagContent::getCreatedAt).reversed());
+
+        int total = all.size();
+        Long totalLikes = all.stream()
+                          .map(HashtagContent::getContent)
+                          .map(Content::getLikeCount)
+                          .reduce(0L, Long::sum);
+        Long totalViews = all.stream()
+                          .map(HashtagContent::getContent)
+                          .map(Content::getViewCount)
+                          .reduce(0L, Long::sum);
+        Long totalShares = all.stream()
+                          .map(HashtagContent::getContent)
+                          .map(Content::getShareCount)
+                          .reduce(0L, Long::sum);
+
+
+        // when
+        List<ContentStatisticsData> results = givenParams.stream()
+                                                 .map(contentQueryRepository::findStatisticData)
+                                                 .toList();
+
+        // then
+        for (ContentStatisticsData result : results) {
+            ContentStatisticsQueryParameter parameter = result.parameter();
+            Long expectedTotal = switch (parameter.countValue()) {
+                case COUNT -> (long) total;
+                case SHARE_COUNT -> totalShares;
+                case LIKE_COUNT -> totalLikes;
+                case VIEW_COUNT -> totalViews;
+            };
+
+            Long actual = result.data()
+                              .stream()
+                              .map(ContentStatisticDataUnit::getCount)
+                              .reduce(0L, Long::sum);
+
+            assertThat(actual)
+                .describedAs("파라미터 쿼리 결과 일치 체크: " + parameter.toString())
+                .isEqualTo(expectedTotal);
+        }
+
+
+        System.out.println();
     }
 }
