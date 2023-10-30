@@ -1,6 +1,9 @@
 package beforespring.socialfeed.web.api.v1.member;
 
+import beforespring.socialfeed.jwt.domain.AuthToken;
 import beforespring.socialfeed.member.service.MemberService;
+import beforespring.socialfeed.member.service.dto.PasswordAuth;
+import beforespring.socialfeed.member.service.dto.RefreshTokenAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,5 +43,15 @@ public class MemberController {
     @PostMapping("/api/member/confirm")
     public void signupMember(@RequestBody @Valid ConfirmTokenRequest request) {
         memberService.joinConfirm(request);
+    }
+
+    @PostMapping("/api/member/auth")
+    public AuthToken authWithUsernamePassword(@RequestBody PasswordAuth passwordAuth) {
+        return memberService.authenticate(passwordAuth);
+    }
+
+    @PostMapping("/api/member/renew")
+    public AuthToken authWithUsernamePassword(@RequestBody RefreshTokenAuth refreshTokenAuth) {
+        return memberService.authenticate(refreshTokenAuth);
     }
 }
