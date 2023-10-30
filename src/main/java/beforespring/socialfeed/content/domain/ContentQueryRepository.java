@@ -1,5 +1,7 @@
 package beforespring.socialfeed.content.domain;
 
+import beforespring.socialfeed.content.domain.query.ContentStatisticsData;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsQueryParameter;
 import java.util.List;
 
 public interface ContentQueryRepository {
@@ -31,4 +33,11 @@ public interface ContentQueryRepository {
      * @return 최근 게시물에 가장 많이 태그된 해시태그 목록을 태그 숫자가 가장 많은 순으로 반환함.
      */
     List<String> findMostPopularHashtagsIn(long minutes, int howMany);
+
+    /**
+     * 기간별 태그, 좋아요, 공유, 조회 수 통계
+     * @param queryParameter {@link ContentStatisticsQueryParameter}
+     * @return {@link ContentStatisticsData}
+     */
+    ContentStatisticsData findStatisticData(ContentStatisticsQueryParameter queryParameter);
 }

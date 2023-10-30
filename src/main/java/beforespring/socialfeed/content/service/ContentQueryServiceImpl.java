@@ -4,8 +4,8 @@ import beforespring.socialfeed.content.domain.ContentQueryParameter;
 import beforespring.socialfeed.content.domain.ContentQueryRepository;
 import beforespring.socialfeed.content.domain.ContentQueryResult;
 import beforespring.socialfeed.content.service.dto.ContentListElement;
-import beforespring.socialfeed.content.service.dto.ContentStatisticsData;
-import beforespring.socialfeed.content.service.dto.ContentStatisticsQueryParameter;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsData;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsQueryParameter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class ContentQueryServiceImpl implements ContentQueryService {
     public ContentStatisticsData getContentStatistics(
         ContentStatisticsQueryParameter queryParameter
     ) {
-        return null;
+        return contentQueryRepository.findStatisticData(queryParameter);
     }
 
     /**

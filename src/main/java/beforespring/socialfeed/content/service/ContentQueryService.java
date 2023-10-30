@@ -3,8 +3,8 @@ package beforespring.socialfeed.content.service;
 import beforespring.socialfeed.content.domain.ContentQueryParameter;
 import beforespring.socialfeed.content.domain.ContentQueryResult;
 import beforespring.socialfeed.content.service.dto.ContentListElement;
-import beforespring.socialfeed.content.service.dto.ContentStatisticsData;
-import beforespring.socialfeed.content.service.dto.ContentStatisticsQueryParameter;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsData;
+import beforespring.socialfeed.content.domain.query.ContentStatisticsQueryParameter;
 import java.util.List;
 
 public interface ContentQueryService {
