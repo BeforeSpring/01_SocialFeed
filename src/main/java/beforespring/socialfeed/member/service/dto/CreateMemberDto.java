@@ -1,4 +1,4 @@
-package beforespring.socialfeed.member.controller.dto;
+package beforespring.socialfeed.member.service.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

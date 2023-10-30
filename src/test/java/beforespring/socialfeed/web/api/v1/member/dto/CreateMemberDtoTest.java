@@ -1,9 +1,9 @@
-package beforespring.socialfeed.member.controller.dto;
+package beforespring.socialfeed.web.api.v1.member.dto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

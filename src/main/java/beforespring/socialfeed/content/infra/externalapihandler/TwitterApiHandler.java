@@ -1,6 +1,7 @@
-package beforespring.socialfeed.content.service;
+package beforespring.socialfeed.content.infra.externalapihandler;
 
 import beforespring.socialfeed.content.domain.ContentSourceType;
+import beforespring.socialfeed.content.domain.ExternalApiHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

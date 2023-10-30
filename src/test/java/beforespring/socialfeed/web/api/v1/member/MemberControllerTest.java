@@ -1,12 +1,13 @@
-package beforespring.socialfeed.member.controller;
+package beforespring.socialfeed.web.api.v1.member;
 
-import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
+import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import beforespring.socialfeed.content.controller.ContentController;
+import beforespring.socialfeed.web.api.v1.content.ContentController;
 import beforespring.socialfeed.member.service.MemberService;
+import beforespring.socialfeed.web.api.v1.member.MemberController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

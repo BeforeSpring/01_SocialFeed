@@ -1,4 +1,4 @@
-package beforespring.socialfeed.member.controller;
+package beforespring.socialfeed.web.api.v1.member;
 
 import beforespring.socialfeed.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.*;
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberResponse;
+import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.*;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberResponse;
 
 @RestController
 @RequiredArgsConstructor

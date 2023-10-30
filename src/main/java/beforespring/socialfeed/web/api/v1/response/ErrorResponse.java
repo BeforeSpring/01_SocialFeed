@@ -1,4 +1,4 @@
-package beforespring.socialfeed.content.controller.response;
+package beforespring.socialfeed.web.api.v1.response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
