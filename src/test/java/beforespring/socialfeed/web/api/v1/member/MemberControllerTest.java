@@ -1,4 +1,4 @@
-package beforespring.socialfeed.member.controller;
+package beforespring.socialfeed.web.api.v1.member;
 
 import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
 import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
