@@ -27,7 +27,7 @@ public class MemberController {
      * @param request 멤버 생성을 위한 dto
      * @return 생성된 멤버의 아이디를 반환합니다.
      */
-    @PostMapping("/api/member/new")
+    @PostMapping("/api/v1/member/new")
     public CreateMemberResponse createMember(@RequestBody @Valid CreateMemberRequest request) {
         Long memberId = memberService.join(request);
         return new CreateMemberResponse(memberId);
@@ -40,17 +40,17 @@ public class MemberController {
      *
      * @param request
      */
-    @PostMapping("/api/member/confirm")
+    @PostMapping("/api/v1/member/confirm")
     public void signupMember(@RequestBody @Valid ConfirmTokenRequest request) {
         memberService.joinConfirm(request);
     }
 
-    @PostMapping("/api/member/auth")
+    @PostMapping("/api/v1/member/auth")
     public AuthToken authWithUsernamePassword(@RequestBody PasswordAuth passwordAuth) {
         return memberService.authenticate(passwordAuth);
     }
 
-    @PostMapping("/api/member/renew")
+    @PostMapping("/api/v1/member/renew")
     public AuthToken authWithUsernamePassword(@RequestBody RefreshTokenAuth refreshTokenAuth) {
         return memberService.authenticate(refreshTokenAuth);
     }
