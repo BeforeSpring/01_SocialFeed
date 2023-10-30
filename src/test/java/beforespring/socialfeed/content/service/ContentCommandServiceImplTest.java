@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,6 +24,13 @@ class ContentCommandServiceImplTest {
 
     @Mock
     private ContentRepository contentRepository;
+
+    @Mock
+    private ExternalApiHandlerResolver externalApiHandlerResolver;
+
+    @Mock
+    private ExternalApiHandler externalApiHandler;
+
 
     @Test
     @DisplayName("getContentSpecific 테스트")
@@ -54,10 +62,9 @@ class ContentCommandServiceImplTest {
 
         when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
 
-        ContentCommandService contentCommandService = new ContentCommandServiceImpl(contentRepository);
+        ContentCommandService contentCommandService = new ContentCommandServiceImpl(contentRepository, externalApiHandlerResolver);
 
         ContentSpecificData result = contentCommandService.getContentSpecific(1L);
-        System.out.println(result);
         assertEquals(contentSpecificData, result);
     }
 
@@ -70,6 +77,7 @@ class ContentCommandServiceImplTest {
             .build();
 
         when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
+        when(externalApiHandlerResolver.resolveHandler(any())).thenReturn(externalApiHandler);
 
         contentService.like(1L);
 
@@ -85,7 +93,10 @@ class ContentCommandServiceImplTest {
             .build();
 
         when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
+        when(externalApiHandlerResolver.resolveHandler(any())).thenReturn(externalApiHandler);
+
         contentService.share(1L);
+
         assertEquals(3L, content.getShareCount());
     }
 }
