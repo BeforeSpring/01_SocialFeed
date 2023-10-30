@@ -10,26 +10,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ContentCommandImplServiceImplTest {
+class ContentCommandServiceImplTest {
     @InjectMocks
-    private ContentCommandImplServiceImpl contentService;
+    private ContentCommandServiceImpl contentService;
 
     @Mock
     private ContentRepository contentRepository;
-
-    @Mock
-    private HashtagContentRepository hashtagContentRepository;
 
     @Test
     @DisplayName("getContentSpecific 테스트")
@@ -61,7 +54,7 @@ class ContentCommandImplServiceImplTest {
 
         when(contentRepository.findById(1L)).thenReturn(Optional.of(content));
 
-        ContentCommandService contentCommandService = new ContentCommandImplServiceImpl(contentRepository, hashtagContentRepository);
+        ContentCommandService contentCommandService = new ContentCommandServiceImpl(contentRepository);
 
         ContentSpecificData result = contentCommandService.getContentSpecific(1L);
         System.out.println(result);

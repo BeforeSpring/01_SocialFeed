@@ -3,20 +3,16 @@ package beforespring.socialfeed.content.service;
 import beforespring.socialfeed.content.domain.*;
 import beforespring.socialfeed.content.service.dto.ContentSpecificData;
 import beforespring.socialfeed.content.service.exception.ContentNotFoundException;
-import beforespring.socialfeed.content.service.exception.HashtagNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ContentCommandImplServiceImpl implements ContentCommandService {
+public class ContentCommandServiceImpl implements ContentCommandService {
     private final ContentRepository contentRepository;
-    private final HashtagContentRepository hashtagContentRepository;
 
     @Override
     public ContentSpecificData getContentSpecific(Long contentId) {
