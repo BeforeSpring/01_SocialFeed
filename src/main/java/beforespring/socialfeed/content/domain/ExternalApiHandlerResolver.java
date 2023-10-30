@@ -1,12 +1,10 @@
-package beforespring.socialfeed.content.service;
-
-import beforespring.socialfeed.content.domain.ContentSourceType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package beforespring.socialfeed.content.domain;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ExternalApiHandlerResolver {
