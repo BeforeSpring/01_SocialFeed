@@ -61,8 +61,7 @@ class CreateMemberDtoTest {
 
         //then
         assertThat(violation.size()).isEqualTo(1);
-        assertThat(messages).contains("이메일 형식이 올바르지 않습니다.")
-            .describedAs("이메일 형식이 바르지 않으면 예외가 발생해야 함.");
+        assertThat(messages).contains("이메일 형식이 올바르지 않습니다.");
     }
 
     @Test
@@ -105,8 +104,7 @@ class CreateMemberDtoTest {
 
         //then
         assertThat(violation.size()).isEqualTo(1);
-        assertThat(messages).contains("비밀번호는 최소 10자 이상이어야 합니다.")
-            .describedAs("10자 미만의 비밀번호는 예외가 발생해야 함.");
+        assertThat(messages).contains("비밀번호는 최소 10자 이상이어야 합니다.");
     }
 
     @Test
