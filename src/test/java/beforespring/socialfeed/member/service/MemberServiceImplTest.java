@@ -1,6 +1,5 @@
 package beforespring.socialfeed.member.service;
 
-import beforespring.Fixture;
 import beforespring.socialfeed.jwt.domain.AuthToken;
 import beforespring.socialfeed.member.domain.*;
 import beforespring.socialfeed.member.exception.PasswordMismatchException;
@@ -20,8 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static beforespring.Fixture.randString;
-import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
+import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

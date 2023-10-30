@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import static beforespring.socialfeed.member.controller.dto.ConfirmTokenDto.ConfirmTokenRequest;
-import static beforespring.socialfeed.member.controller.dto.CreateMemberDto.CreateMemberRequest;
+import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
 
 @Service
 @RequiredArgsConstructor

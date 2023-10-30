@@ -1,4 +1,4 @@
-package beforespring.socialfeed.content.controller;
+package beforespring.socialfeed.web.api.v1.content;
 
 import beforespring.socialfeed.content.service.ContentCommandService;
 import beforespring.socialfeed.content.service.dto.ContentSpecificData;
