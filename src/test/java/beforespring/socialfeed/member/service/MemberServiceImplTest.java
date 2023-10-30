@@ -2,21 +2,21 @@ package beforespring.socialfeed.member.service;
 
 import beforespring.socialfeed.jwt.domain.AuthToken;
 import beforespring.socialfeed.member.domain.*;
-import beforespring.socialfeed.member.exception.PasswordMismatchException;
 import beforespring.socialfeed.member.exception.TokenMismatchException;
 import beforespring.socialfeed.member.infra.TokenSenderImpl;
 import beforespring.socialfeed.member.service.dto.PasswordAuth;
 import beforespring.socialfeed.member.service.dto.RefreshTokenAuth;
 import beforespring.socialfeed.member.service.exception.ConfirmNotFoundException;
 import beforespring.socialfeed.member.service.exception.MemberNotFoundException;
-import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.util.List;
 
 import static beforespring.Fixture.randString;
 import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
@@ -87,7 +87,7 @@ class MemberServiceImplTest {
 
         //when
         String token = findConfirm.getToken();
-        confirmTokenRequest = new ConfirmTokenRequest(createMemberRequest.getUsername(), createMemberRequest.getPassword(), token);
+        confirmTokenRequest = new ConfirmTokenRequest(createMemberRequest.getUsername(), token);
         memberService.joinConfirm(confirmTokenRequest);
 
         //then
@@ -103,7 +103,7 @@ class MemberServiceImplTest {
 
         //when //then
         String newToken = tokenSender.generateToken();
-        confirmTokenRequest = new ConfirmTokenRequest(createMemberRequest.getUsername(), createMemberRequest.getPassword(), newToken);
+        confirmTokenRequest = new ConfirmTokenRequest(createMemberRequest.getUsername(), newToken);
 
         assertThatThrownBy(() -> memberService.joinConfirm(confirmTokenRequest))
             .isInstanceOf(TokenMismatchException.class)
@@ -121,30 +121,12 @@ class MemberServiceImplTest {
 
         //when //then
         String wrongUsername = "aaa";
-        confirmTokenRequest = new ConfirmTokenRequest(wrongUsername, createMemberRequest.getPassword(), token);
+        confirmTokenRequest = new ConfirmTokenRequest(wrongUsername, token);
 
         assertThatThrownBy(() -> memberService.joinConfirm(confirmTokenRequest))
             .isInstanceOf(MemberNotFoundException.class)
             .describedAs("계정이 일치하지 않으면 가입 요청에 실패해야 합니다.");
 
-    }
-
-    @Test
-    @DisplayName("가입 승인 요청 시 저장된 멤버와 비밀번호가 일치하지 않으면 가입 승인 요청이 실패해야 합니다.")
-    void join_confirm_mismatch_password_test() {
-        //given
-        Long memberId = memberService.join(createMemberRequest);
-        Member findMember = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        Confirm findConfirm = confirmRepository.findByMember(findMember).orElseThrow(ConfirmNotFoundException::new);
-        String token = findConfirm.getToken();
-
-        //when //then
-        String wrongPassword = "aaa";
-        confirmTokenRequest = new ConfirmTokenRequest(createMemberRequest.getUsername(), wrongPassword, token);
-
-        assertThatThrownBy(() -> memberService.joinConfirm(confirmTokenRequest))
-            .isInstanceOf(PasswordMismatchException.class)
-            .describedAs("비밀번호가 일치하지 않으면 가입 요청에 실패해야 합니다.");
     }
 
     @Test

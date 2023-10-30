@@ -1,13 +1,7 @@
 package beforespring.socialfeed.web.api.v1.member;
 
-import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
-import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import beforespring.socialfeed.web.api.v1.content.ContentController;
 import beforespring.socialfeed.member.service.MemberService;
-import beforespring.socialfeed.web.api.v1.member.MemberController;
+import beforespring.socialfeed.web.api.v1.content.ContentController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +18,11 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static beforespring.socialfeed.member.service.dto.ConfirmTokenDto.ConfirmTokenRequest;
+import static beforespring.socialfeed.member.service.dto.CreateMemberDto.CreateMemberRequest;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class MemberControllerTest {
@@ -81,7 +80,7 @@ class MemberControllerTest {
 
         String requestBody = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/api/member/new")
+        mockMvc.perform(post("/api/v1/member/new")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
             .andExpect(status().isOk())
@@ -91,11 +90,11 @@ class MemberControllerTest {
     @Test
     @DisplayName("데이터를 가지고 API가 호출되면 가입 승인 서비스가 실행되어야됩니다")
     void confirm_member_test() throws Exception {
-        ConfirmTokenRequest request = new ConfirmTokenRequest("username", "1234", "1234");
+        ConfirmTokenRequest request = new ConfirmTokenRequest("username", "1234");
 
         String requestBody = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/api/member/confirm")
+        mockMvc.perform(post("/api/v1/member/confirm")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
             .andExpect(status().isOk())

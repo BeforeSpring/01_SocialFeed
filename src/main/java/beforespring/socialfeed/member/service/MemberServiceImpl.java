@@ -57,7 +57,6 @@ public class MemberServiceImpl implements MemberService {
     public void joinConfirm(ConfirmTokenRequest request) {
         Member member = memberRepository.findByUsername(request.getUsername()).orElseThrow(MemberNotFoundException::new);
         Confirm confirm = confirmRepository.findByMember(member).orElseThrow(ConfirmNotFoundException::new);
-        member.verifyPassword(request.getPassword(), passwordHasher);
         confirm.verifyToken(request.getToken());
         member.joinConfirm();
     }
