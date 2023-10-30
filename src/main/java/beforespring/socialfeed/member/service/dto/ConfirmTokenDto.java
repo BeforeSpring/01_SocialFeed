@@ -14,13 +14,10 @@ public class ConfirmTokenDto {
         @NotEmpty
         private String username;
         @NotEmpty
-        private String password;
-        @NotEmpty
         private String token;
 
-        public ConfirmTokenRequest(String username, String password, String token) {
+        public ConfirmTokenRequest(String username, String token) {
             this.username = username;
-            this.password = password;
             this.token = token;
         }
     }
